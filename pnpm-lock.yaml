@@ -25,21 +25,27 @@ importers:
       '@mui/material-nextjs':
         specifier: ^6.4.2
         version: 6.4.2(@emotion/cache@11.14.0)(@emotion/react@11.14.0(@types/react@19.0.8)(react@19.0.0))(@types/react@19.0.8)(next@15.1.6(@babel/core@7.26.7)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0))(react@19.0.0)
-      '@types/formidable':
-        specifier: ^3.4.5
-        version: 3.4.5
       formidable:
         specifier: ^3.5.2
         version: 3.5.2
       next:
         specifier: 15.1.6
         version: 15.1.6(@babel/core@7.26.7)(@playwright/test@1.50.1)(babel-plugin-macros@3.1.0)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      prism-react-renderer:
+        specifier: ^2.4.1
+        version: 2.4.1(react@19.0.0)
+      prismjs:
+        specifier: ^1.29.0
+        version: 1.29.0
       react:
         specifier: ^19.0.0
         version: 19.0.0
       react-dom:
         specifier: ^19.0.0
         version: 19.0.0(react@19.0.0)
+      react-svg:
+        specifier: ^16.3.0
+        version: 16.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
     devDependencies:
       '@eslint/eslintrc':
         specifier: ^3.2.0
@@ -56,6 +62,9 @@ importers:
       '@testing-library/react':
         specifier: ^16.2.0
         version: 16.2.0(@testing-library/dom@10.4.0)(@types/react-dom@19.0.3(@types/react@19.0.8))(@types/react@19.0.8)(react-dom@19.0.0(react@19.0.0))(react@19.0.0)
+      '@types/formidable':
+        specifier: ^3.4.5
+        version: 3.4.5
       '@types/jest':
         specifier: ^29.5.14
         version: 29.5.14
@@ -927,6 +936,10 @@ packages:
     resolution:
       { integrity: sha512-JQ5TuMi45Owi4/BIMAJBoSQoOJu12oOk/gADqlcUL9JEdHB8vyjUSsxqeNXnmXHjYKMi2WcYtezGEEhqUI/E2g== }
 
+  '@tanem/svg-injector@10.1.68':
+    resolution:
+      { integrity: sha512-UkJajeR44u73ujtr5GVSbIlELDWD/mzjqWe54YMK61ljKxFcJoPd9RBSaO7xj02ISCWUqJW99GjrS+sVF0UnrA== }
+
   '@testing-library/dom@10.4.0':
     resolution:
       { integrity: sha512-pemlzrSESWbdAloYml3bAJMEfNh1Z7EduzqPKprCH5S341frlpYnUEW0H72dLxa6IsYr+mPno20GiSm+h9dEdQ== }
@@ -1041,6 +1054,10 @@ packages:
   '@types/parse-json@4.0.2':
     resolution:
       { integrity: sha512-dISoDXWWQwUquiKsyZ4Ng+HX2KsPL7LyHKHQwgGFEA3IaKac4Obd+h2a/a6waisAoepJlBcx9paWqjA8/HVjCw== }
+
+  '@types/prismjs@1.26.5':
+    resolution:
+      { integrity: sha512-AUZTa7hQ2KY5L7AmtSiqxlhWxb4ina0yd8hNbl4TWuqnv/pFP0nDMb3YrfSBf4hJVGLh2YEIBfKaBW/9UEl6IQ== }
 
   '@types/prop-types@15.7.14':
     resolution:
@@ -1473,6 +1490,11 @@ packages:
   concat-map@0.0.1:
     resolution:
       { integrity: sha512-/Srv4dswyQNBfohGpz9o6Yb3Gz3SrUDqBH5rTuhGR7ahtlbYKnVxw2bCFMRljaA7EXHaXZ8wsHdodFvbkhKmqg== }
+
+  content-type@1.0.5:
+    resolution:
+      { integrity: sha512-nTjqfcBFEipKdXCv4YDQWCfmcLZKm81ldF0pAopTvyrFGVbcR6P/VAAd5G7N+0tTr8QqiU0tFadD6FK4NtJwOA== }
+    engines: { node: '>= 0.6' }
 
   convert-source-map@1.9.0:
     resolution:
@@ -3022,6 +3044,17 @@ packages:
       { integrity: sha512-Pdlw/oPxN+aXdmM9R00JVC9WVFoCLTKJvDVLgmJ+qAffBMxsV85l/Lu7sNx4zSzPyoL2euImuEwHhOXdEgNFZQ== }
     engines: { node: ^14.15.0 || ^16.10.0 || >=18.0.0 }
 
+  prism-react-renderer@2.4.1:
+    resolution:
+      { integrity: sha512-ey8Ls/+Di31eqzUxC46h8MksNuGx/n0AAC8uKpwFau4RPDYLuE3EXTp8N8G2vX2N7UC/+IXeNUnlWBGGcAG+Ig== }
+    peerDependencies:
+      react: '>=16.0.0'
+
+  prismjs@1.29.0:
+    resolution:
+      { integrity: sha512-Kx/1w86q/epKcmte75LNrEoT+lX8pBpavuAbvJWRXar7Hz8jrtF+e3vY751p0R8H9HdArwaCTNDDzHg/ScJK1Q== }
+    engines: { node: '>=6' }
+
   prompts@2.4.2:
     resolution:
       { integrity: sha512-NxNv/kLguCA7p3jE8oL2aEBsrJWgAakBpgmgK6lpPWV+WuOmY6r2/zbAVnP+T8bQlA0nzHXSJSJW0Hq7ylaD2Q== }
@@ -3073,6 +3106,13 @@ packages:
   react-is@19.0.0:
     resolution:
       { integrity: sha512-H91OHcwjZsbq3ClIDHMzBShc1rotbfACdWENsmEf0IFvZ3FgGPtdHMcsv45bQ1hAbgdfiA8SnxTKfDS+x/8m2g== }
+
+  react-svg@16.3.0:
+    resolution:
+      { integrity: sha512-MvoQbITgkmpPJYwDTNdiUyoncJFfoa0D86WzoZuMQ9c/ORJURPR6rPMnXDsLOWDCAyXuV9nKZhQhGyP0HZ0MVQ== }
+    peerDependencies:
+      react: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
+      react-dom: ^16.0.0 || ^17.0.0 || ^18.0.0 || ^19.0.0
 
   react-transition-group@4.4.5:
     resolution:
@@ -4480,6 +4520,12 @@ snapshots:
     dependencies:
       tslib: 2.8.1
 
+  '@tanem/svg-injector@10.1.68':
+    dependencies:
+      '@babel/runtime': 7.26.7
+      content-type: 1.0.5
+      tslib: 2.8.1
+
   '@testing-library/dom@10.4.0':
     dependencies:
       '@babel/code-frame': 7.26.2
@@ -4584,6 +4630,8 @@ snapshots:
       undici-types: 6.19.8
 
   '@types/parse-json@4.0.2': {}
+
+  '@types/prismjs@1.26.5': {}
 
   '@types/prop-types@15.7.14': {}
 
@@ -5004,6 +5052,8 @@ snapshots:
       delayed-stream: 1.0.0
 
   concat-map@0.0.1: {}
+
+  content-type@1.0.5: {}
 
   convert-source-map@1.9.0: {}
 
@@ -6610,6 +6660,14 @@ snapshots:
       ansi-styles: 5.2.0
       react-is: 18.3.1
 
+  prism-react-renderer@2.4.1(react@19.0.0):
+    dependencies:
+      '@types/prismjs': 1.26.5
+      clsx: 2.1.1
+      react: 19.0.0
+
+  prismjs@1.29.0: {}
+
   prompts@2.4.2:
     dependencies:
       kleur: 3.0.3
@@ -6645,6 +6703,15 @@ snapshots:
   react-is@18.3.1: {}
 
   react-is@19.0.0: {}
+
+  react-svg@16.3.0(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
+    dependencies:
+      '@babel/runtime': 7.26.7
+      '@tanem/svg-injector': 10.1.68
+      '@types/prop-types': 15.7.14
+      prop-types: 15.8.1
+      react: 19.0.0
+      react-dom: 19.0.0(react@19.0.0)
 
   react-transition-group@4.4.5(react-dom@19.0.0(react@19.0.0))(react@19.0.0):
     dependencies:

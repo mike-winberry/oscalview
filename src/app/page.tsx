@@ -1,40 +1,31 @@
-import { Container, Typography, Box, Chip, Icon } from '@mui/material';
-import GitHubIcon from '@mui/icons-material/GitHub';
+import { Container, Typography } from '@mui/material';
 import Navbar from './components/Navbar';
+import ValidationDisplay from './components/ValidationDisplay';
+import Footer from './components/Footer';
 
 export default function Home() {
   return (
     <>
       <Navbar />
-      <Container data-testid="home-page" maxWidth="sm" style={{ textAlign: 'center', marginTop: '20vh' }}>
-        <Typography variant="h2" gutterBottom>
-          Coming Soon
+      <Container
+        data-testid="home-page"
+        sx={{
+          textAlign: 'center',
+          paddingTop: '2rem',
+          width: '100vw',
+          flex: '1 0 auto',
+          overflowY: 'auto',
+        }}
+      >
+        <Typography variant="h4" component="h1" gutterBottom>
+          Upload OSCAL to validate
         </Typography>
-        <Typography variant="body1" gutterBottom>
-          We are working hard to bring you a great experience. Stay tuned!
+        <Typography color="text.secondary" variant="subtitle1" component="h2" gutterBottom>
+          supports YAML and JSON
         </Typography>
-        <Box component="footer" mt={5} display="flex" justifyContent="center">
-          <Chip
-            icon={<GitHubIcon />}
-            label="Go OSCAL"
-            component="a"
-            href="https://github.com/defenseunicorns/go-oscal"
-            target="_blank"
-            rel="noopener noreferrer"
-            clickable
-            style={{ marginRight: '10px' }}
-          />
-          <Chip
-            icon={<Icon src="/icons/oscal-gears-icon-140.png" component="img" />}
-            label="NIST OSCAL"
-            component="a"
-            href="https://pages.nist.gov/OSCAL/"
-            target="_blank"
-            rel="noopener noreferrer"
-            clickable
-          />
-        </Box>
+        <ValidationDisplay />
       </Container>
+      <Footer />
     </>
   );
 }
