@@ -1,58 +1,10 @@
 'use client';
 import { Box, Button, CircularProgress, Paper, Tabs, Tab, Tooltip, Typography } from '@mui/material';
-import { useState } from 'react';
+import { useEffect, useRef } from 'react';
 import UploadIcon from '@mui/icons-material/Upload';
-import CheckCircleIcon from '@mui/icons-material/CheckCircle';
 import JsonViewer from './JsonViewer';
-
-function useFileUpload() {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    if (event.target.files && event.target.files.length > 0) {
-      setSelectedFile(event.target.files[0]);
-    }
-  };
-
-  return { selectedFile, handleFileChange };
-}
-
-function useValidation(selectedFile: File | null) {
-  const [validationResult, setValidationResult] = useState<object | null>(null);
-  const [loading, setLoading] = useState(false);
-
-  const handleValidate = async () => {
-    if (!selectedFile) return;
-
-    setLoading(true);
-    const reader = new FileReader();
-    reader.onload = async (event) => {
-      const fileContent = event.target?.result;
-      if (typeof fileContent === 'string') {
-        const formData = new FormData();
-        formData.append('data', fileContent);
-
-        try {
-          const response = await fetch('/api/validate', {
-            method: 'POST',
-            body: formData,
-          });
-
-          const result = await response.json();
-          setValidationResult(result);
-        } catch (error) {
-          setValidationResult({ error: error instanceof Error ? error.message : 'Unknown error' });
-        } finally {
-          setLoading(false);
-        }
-      }
-    };
-
-    reader.readAsText(selectedFile);
-  };
-
-  return { validationResult, handleValidate, loading };
-}
+import useFileUpload from '@/hooks/useFileUpload';
+import useValidation from '@/hooks/useValidation';
 
 function FileNameDisplay({ fileName }: { fileName: string }) {
   const truncateFileName = (name: string) => {
@@ -95,6 +47,14 @@ function ValidationResultDisplay({ validationResult }: { validationResult: objec
 export default function ValidationDisplay() {
   const { selectedFile, handleFileChange } = useFileUpload();
   const { validationResult, handleValidate, loading } = useValidation(selectedFile);
+  const previousFileRef = useRef<File | null>(null);
+
+  useEffect(() => {
+    if (selectedFile && selectedFile !== previousFileRef.current) {
+      handleValidate();
+      previousFileRef.current = selectedFile;
+    }
+  }, [selectedFile, handleValidate]);
 
   return (
     <Paper
@@ -135,17 +95,6 @@ export default function ValidationDisplay() {
             sx={{ minWidth: '80px' }}
           >
             Upload
-          </Button>
-          <Button
-            data-testid="validate-button"
-            variant="contained"
-            color="secondary"
-            startIcon={<CheckCircleIcon />}
-            disabled={!selectedFile || loading}
-            onClick={handleValidate}
-            sx={{ minWidth: '80px' }}
-          >
-            Validate
           </Button>
         </Box>
       </Box>

@@ -1,7 +1,7 @@
 import { Container, Typography } from '@mui/material';
-import Navbar from './components/Navbar';
-import ValidationDisplay from './components/ValidationDisplay';
-import Footer from './components/Footer';
+import Navbar from '../components/Navbar';
+import ValidationDisplay from '../components/ValidationDisplay';
+import Footer from '../components/Footer';
 
 export default function Home() {
   return (
