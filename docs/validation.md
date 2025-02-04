@@ -25,7 +25,7 @@ Below are examples of how to use Postman to send requests to the `/api/validate`
 ### Example 1: Validating `catalog.json`
 
 1. **Create a new POST request in Postman.**
-2. **Set the URL** to `https://oscalview.netlify.app/api/validate`.
+2. **Set the URL** to `https://oscalot.netlify.app/api/validate`.
 3. **Select the `Body` tab** and choose `form-data`.
 4. **Add a new key-value pair**:
 
@@ -42,7 +42,7 @@ Below are examples of how to use Postman to send requests to the `/api/validate`
 ### Example 2: Validating `invalid-assessment-result.yaml`
 
 1. **Create a new POST request in Postman.**
-2. **Set the URL** to `https://oscalview.netlify.app/api/validate`.
+2. **Set the URL** to `https://oscalot.netlify.app/api/validate`.
 3. **Select the `Body` tab** and choose `form-data`.
 4. **Add a new key-value pair**:
 

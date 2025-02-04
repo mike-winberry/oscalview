@@ -8,5 +8,9 @@ export default function RootLayout({
 }: Readonly<{
   children: React.ReactNode;
 }>) {
-  return <ClientLayout>{children}</ClientLayout>;
+  return (
+    <ClientLayout>
+      <div style={{ display: 'flex', flexDirection: 'column', minHeight: '100vh', minWidth: '100vw' }}>{children}</div>
+    </ClientLayout>
+  );
 }

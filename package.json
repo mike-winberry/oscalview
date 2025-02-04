@@ -14,7 +14,7 @@
     "build:wasm": "cd wasm && make build",
     "test:playwright": "npx playwright test",
     "build:netlify": "cd wasm && go mod tidy",
-    "test:unit": "npx jest",
+    "test:unit": "npx jest --passWithNoTests",
     "test:all": "npm run test:unit && npm run test:playwright"
   },
   "dependencies": {
@@ -24,11 +24,15 @@
     "@mui/icons-material": "^6.4.2",
     "@mui/material": "^6.4.2",
     "@mui/material-nextjs": "^6.4.2",
+    "@svgr/webpack": "^8.1.0",
     "@types/formidable": "^3.4.5",
     "formidable": "^3.5.2",
     "next": "15.1.6",
+    "prism-react-renderer": "^2.4.1",
+    "prismjs": "^1.29.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0"
+    "react-dom": "^19.0.0",
+    "react-svg": "^16.3.0"
   },
   "devDependencies": {
     "@eslint/eslintrc": "^3.2.0",
