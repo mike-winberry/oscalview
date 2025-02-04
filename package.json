@@ -13,7 +13,7 @@
     "pre-commit": "npm run format && npm run lint && npm run test:all",
     "build:wasm": "cd wasm && make build",
     "test:playwright": "npx playwright test",
-    "build:netlify": "cd wasm && go mod tidy && cd .. && npm run build",
+    "build:netlify": "cd wasm && go mod tidy",
     "test:unit": "npx jest",
     "test:all": "npm run test:unit && npm run test:playwright"
   },
