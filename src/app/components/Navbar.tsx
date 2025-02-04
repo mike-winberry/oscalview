@@ -6,12 +6,12 @@ export default function Navbar() {
     <AppBar position="static">
       <Toolbar>
         <Typography variant="h6" component="div" sx={{ flexGrow: 1 }}>
-          OSCALVIEWER
+          Oscalot
         </Typography>
         <IconButton
           edge="end"
           color="inherit"
-          href="https://github.com/defenseunicorns/oscalview"
+          href="https://github.com/mike-winberry/oscalot"
           target="_blank"
           rel="noopener noreferrer"
         >

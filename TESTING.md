@@ -6,7 +6,7 @@ This document provides guidelines for writing and organizing Playwright and Jest
 
 ### Project Structure
 
-Playwright tests are located in the `oscalview/tests` directory. This is specified in the Playwright configuration file.
+Playwright tests are located in the `oscalot/tests` directory. This is specified in the Playwright configuration file.
 
 ### Naming Convention
 
@@ -15,7 +15,7 @@ Playwright tests are located in the `oscalview/tests` directory. This is specifi
 
 ### Writing a Playwright Test
 
-1. **Create a Test File**: Place your test file in the `tests` directory, e.g., `oscalview/tests/src/app/app-load.test.ts`.
+1. **Create a Test File**: Place your test file in the `tests` directory, e.g., `oscalot/tests/src/app/app-load.test.ts`.
 
 2. **Write the Test**: Use Playwright's `test` and `expect` functions to define and run your tests.
 
@@ -54,7 +54,7 @@ Jest tests can be placed in a `__tests__` directory or alongside the components 
 
 ### Writing a Jest Test
 
-1. **Create a Test File**: Place your test file in the `__tests__` directory or next to the component, e.g., `oscalview/src/components/Button.test.tsx`.
+1. **Create a Test File**: Place your test file in the `__tests__` directory or next to the component, e.g., `oscalot/src/components/Button.test.tsx`.
 
 2. **Write the Test**: Use Jest and Testing Library to define and run your tests.
 
