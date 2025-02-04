@@ -2,16 +2,22 @@ This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-
 
 ## Getting Started
 
-First, run the development server:
+First, ensure you have [pnpm](https://pnpm.io/) installed. If not, you can install it using npm:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+npm install -g pnpm
+```
+
+Then, install the project dependencies:
+
+```bash
+pnpm install
+```
+
+Run the development server:
+
+```bash
 pnpm dev
-# or
-bun dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
@@ -19,6 +25,24 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
 
 This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+
+## Testing
+
+For detailed guidelines on writing and organizing tests, please refer to the [Testing Guide](./TESTING.md).
+
+### Running Tests
+
+- **Playwright Tests**: Run end-to-end tests using Playwright with the following command:
+
+  ```bash
+  pnpm test:playwright
+  ```
+
+- **Unit Tests**: Run unit tests using Jest with the following command:
+
+  ```bash
+  pnpm test:unit
+  ```
 
 ## Learn More
 
@@ -34,3 +58,43 @@ You can check out [the Next.js GitHub repository](https://github.com/vercel/next
 The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+
+## Development Scripts
+
+- **Build**: Compile the project for production:
+
+  ```bash
+  pnpm build
+  ```
+
+- **Start**: Start the production server:
+
+  ```bash
+  pnpm start
+  ```
+
+- **Lint**: Run ESLint to check for code quality issues:
+
+  ```bash
+  pnpm lint
+  ```
+
+- **Format**: Format the code using Prettier:
+
+  ```bash
+  pnpm format
+  ```
+
+- **Pre-commit**: Run formatting and linting before committing:
+
+  ```bash
+  pnpm pre-commit
+  ```
+
+- **Build WASM**: Build the WebAssembly module:
+
+  ```bash
+  pnpm build:wasm
+  ```
+
+By following these instructions, you can effectively develop and test the project using the latest version of Next.js and the provided scripts.
