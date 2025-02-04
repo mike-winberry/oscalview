@@ -1,6 +1,6 @@
 module oscalot/wasm
 
-go 1.22
+go 1.22.3
 
 require (
 	github.com/defenseunicorns/go-oscal v0.6.2
