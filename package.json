@@ -5,7 +5,6 @@
   "scripts": {
     "predev": "npm run build:wasm",
     "dev": "next dev --turbopack",
-    "prebuild": "npm run build:netlify",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
@@ -13,7 +12,6 @@
     "pre-commit": "npm run format && npm run lint && npm run test:all",
     "build:wasm": "cd wasm && make build",
     "test:playwright": "npx playwright test",
-    "build:netlify": "cd wasm && go mod tidy",
     "test:unit": "npx jest --passWithNoTests",
     "test:all": "npm run test:unit && npm run test:playwright"
   },
