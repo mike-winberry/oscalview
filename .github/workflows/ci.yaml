@@ -24,13 +24,13 @@ jobs:
         run: npx pnpm install
 
       - name: Run ESLint
-        run: npm lint
+        run: npm run lint
 
       - name: Run Prettier
-        run: npm format --check
+        run: npm run format --check
 
       - name: Run Unit Tests
-        run: npm test:unit
+        run: npm run test:unit
 
       - name: Run Playwright Tests
-        run: npm test:playwright
+        run: npm run test:playwright
