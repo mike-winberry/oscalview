@@ -1,5 +1,5 @@
 'use client';
-import { Box, Button, Paper, Tabs, Tab, Tooltip, Typography } from '@mui/material';
+import { Box, Button, CircularProgress, Paper, Tabs, Tab, Tooltip, Typography } from '@mui/material';
 import { useState } from 'react';
 import UploadIcon from '@mui/icons-material/Upload';
 import CheckCircleIcon from '@mui/icons-material/CheckCircle';
@@ -19,10 +19,12 @@ function useFileUpload() {
 
 function useValidation(selectedFile: File | null) {
   const [validationResult, setValidationResult] = useState<object | null>(null);
+  const [loading, setLoading] = useState(false);
 
   const handleValidate = async () => {
     if (!selectedFile) return;
 
+    setLoading(true);
     const reader = new FileReader();
     reader.onload = async (event) => {
       const fileContent = event.target?.result;
@@ -40,6 +42,8 @@ function useValidation(selectedFile: File | null) {
           setValidationResult(result);
         } catch (error) {
           setValidationResult({ error: error instanceof Error ? error.message : 'Unknown error' });
+        } finally {
+          setLoading(false);
         }
       }
     };
@@ -47,7 +51,7 @@ function useValidation(selectedFile: File | null) {
     reader.readAsText(selectedFile);
   };
 
-  return { validationResult, handleValidate };
+  return { validationResult, handleValidate, loading };
 }
 
 function FileNameDisplay({ fileName }: { fileName: string }) {
@@ -90,7 +94,7 @@ function ValidationResultDisplay({ validationResult }: { validationResult: objec
 
 export default function ValidationDisplay() {
   const { selectedFile, handleFileChange } = useFileUpload();
-  const { validationResult, handleValidate } = useValidation(selectedFile);
+  const { validationResult, handleValidate, loading } = useValidation(selectedFile);
 
   return (
     <Paper
@@ -137,7 +141,7 @@ export default function ValidationDisplay() {
             variant="contained"
             color="secondary"
             startIcon={<CheckCircleIcon />}
-            disabled={!selectedFile}
+            disabled={!selectedFile || loading}
             onClick={handleValidate}
             sx={{ minWidth: '80px' }}
           >
@@ -145,7 +149,11 @@ export default function ValidationDisplay() {
           </Button>
         </Box>
       </Box>
-      <ValidationResultDisplay validationResult={validationResult} />
+      {loading ? (
+        <CircularProgress data-testid="loading-spinner" sx={{ marginTop: '20px' }} />
+      ) : (
+        <ValidationResultDisplay validationResult={validationResult} />
+      )}
     </Paper>
   );
 }

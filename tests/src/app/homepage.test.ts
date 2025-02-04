@@ -46,4 +46,15 @@ test.describe('Home Page', () => {
     await expect(validationResult).toContainText('error');
     await expect(validationResult).not.toContainText('errors');
   });
+
+  test('should display a loading spinner when the file is being validated', async ({ page }) => {
+    const filePath = path.join(__dirname, '../../../test-data/oscal/valid-component-definition.yaml');
+    await page.setInputFiles('[data-testid="file-upload-input"]', filePath);
+
+    await page.click('[data-testid="file-upload-button"]');
+    await page.click('[data-testid="validate-button"]');
+
+    const loadingSpinner = await page.locator('[data-testid="loading-spinner"]');
+    await expect(loadingSpinner).toBeVisible();
+  });
 });
