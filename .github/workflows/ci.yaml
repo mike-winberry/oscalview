@@ -21,16 +21,16 @@ jobs:
           node-version: '20'
 
       - name: Install dependencies
-        run: pnpm install
+        run: npx pnpm install
 
       - name: Run ESLint
-        run: pnpm lint
+        run: npm lint
 
       - name: Run Prettier
-        run: pnpm format --check
+        run: npm format --check
 
       - name: Run Unit Tests
-        run: pnpm test:unit
+        run: npm test:unit
 
       - name: Run Playwright Tests
-        run: pnpm test:playwright
+        run: npm test:playwright
