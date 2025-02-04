@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - '**' # Run on every branch
+  pull_request:
+    branches:
+      - '**' # Run on every PR
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: pnpm install
+
+      - name: Run ESLint
+        run: pnpm lint
+
+      - name: Run Prettier
+        run: pnpm format --check
+
+      - name: Run Unit Tests
+        run: pnpm test:unit
+
+      - name: Run Playwright Tests
+        run: pnpm test:playwright
