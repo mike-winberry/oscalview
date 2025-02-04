@@ -2,11 +2,15 @@ name: CI
 
 on:
   push:
-    branches:
-      - '**' # Run on every branch
+    branches-ignore:
+      - '**' # Ignore all branches for push events
   pull_request:
     branches:
       - '**' # Run on every PR
+    types:
+      - opened
+      - synchronize
+      - reopened
 
 jobs:
   build-and-test:
