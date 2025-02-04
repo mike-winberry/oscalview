@@ -22,8 +22,6 @@
     "@mui/icons-material": "^6.4.2",
     "@mui/material": "^6.4.2",
     "@mui/material-nextjs": "^6.4.2",
-    "@svgr/webpack": "^8.1.0",
-    "@types/formidable": "^3.4.5",
     "formidable": "^3.5.2",
     "next": "15.1.6",
     "prism-react-renderer": "^2.4.1",
@@ -33,6 +31,7 @@
     "react-svg": "^16.3.0"
   },
   "devDependencies": {
+    "@types/formidable": "^3.4.5",
     "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/dom": "^10.4.0",
