@@ -13,14 +13,7 @@
  - Public API for validating OSCAL documents.
    - /api/validate
      - Validates an OSCAL document and returns the validation results.
-     - POST requests can validate a file by passing the file name in the request body using `form: { data: fileContent }`
-
-Example:
-```
-curl -X POST https://oscalot.com/api/validate \
-  -H "Content-Type: multipart/form-data" \
-  -F "data=@path/to/oscal/document.yaml"
-```
+     - POST requests can validate a file by passing the file content in the request body using `form: { data: fileContent }`
 
 ### Planned Features
 - Single-file Multi-document yaml validation
