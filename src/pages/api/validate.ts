@@ -27,23 +27,29 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
 
   const form = formidable();
 
-  form.parse(req, async (err, fields) => {
-    if (err) {
-      return res.status(500).json({ error: 'Error parsing the form' });
-    }
+  const parseForm = () =>
+    new Promise<{ fields: formidable.Fields; files: formidable.Files }>((resolve, reject) => {
+      form.parse(req, (err, fields, files) => {
+        if (err) {
+          reject(err);
+        } else {
+          resolve({ fields, files });
+        }
+      });
+    });
 
+  try {
+    const { fields } = await parseForm();
     const data = fields.data; // Ensure this matches the form field name
 
     if (!data) {
       return res.status(400).json({ error: 'No data provided' });
     }
 
-    try {
-      // eslint-disable-next-line @typescript-eslint/no-explicit-any
-      const result = (globalThis as any).validateOscal(data);
-      return res.status(200).json(result);
-    } catch (error) {
-      return res.status(500).json({ error: `Validation failed: ${error}` });
-    }
-  });
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const result = (globalThis as any).validateOscal(data);
+    return res.status(200).json(result);
+  } catch (error) {
+    return res.status(500).json({ error: `Error parsing the form: ${error}` });
+  }
 }
