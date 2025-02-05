@@ -63,7 +63,6 @@ export default function ValidationDisplay() {
         <Box
           sx={{
             padding: '10px',
-            // border: '1px solid #ccc',
             display: 'flex',
             flexDirection: 'column',
             flexGrow: 1,
