@@ -19,7 +19,7 @@ export default function ClientLayout({
 }>) {
   return (
     <html lang="en">
-      <body style={{}}>
+      <body>
         <AppRouterCacheProvider>
           <ThemeProvider theme={theme}>
             <FileValidationProvider>
