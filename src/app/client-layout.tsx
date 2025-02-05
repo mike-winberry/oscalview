@@ -26,7 +26,12 @@ export default function ClientLayout({
               <CssBaseline />
               <PageContainer
                 maxWidth={false}
-                sx={{ display: 'flex', flexDirection: 'column', maxHeight: '100vh', minHeight: '100vh' }}
+                sx={{
+                  display: 'flex',
+                  flexDirection: 'column',
+                  maxHeight: '100vh',
+                  minHeight: '100vh',
+                }}
                 disableGutters
               >
                 {children}
