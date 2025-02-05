@@ -4,10 +4,11 @@ import Box from '@mui/material/Box/Box';
 
 const JsonViewer = ({ code }: { code: string }) => {
   return (
-    <Box data-testid="json-viewer" sx={{ width: '100%', overflow: 'auto', textAlign: 'left' }}>
-      <Highlight theme={themes.shadesOfPurple} code={code} language="json">
-        {({ style, tokens, getLineProps, getTokenProps }) => (
-          <pre style={{ ...style, margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
+    <Highlight theme={themes.shadesOfPurple} code={code} language="json">
+      {({ style, tokens, getLineProps, getTokenProps }) => {
+        style.height = '100% !important';
+        return (
+          <Box style={{ ...style, margin: 0, whiteSpace: 'pre-wrap', wordWrap: 'break-word' }}>
             {tokens.map((line, i) => (
               <div key={i} {...getLineProps({ line })}>
                 <span>{i + 1}</span>
@@ -16,10 +17,10 @@ const JsonViewer = ({ code }: { code: string }) => {
                 ))}
               </div>
             ))}
-          </pre>
-        )}
-      </Highlight>
-    </Box>
+          </Box>
+        );
+      }}
+    </Highlight>
   );
 };
 

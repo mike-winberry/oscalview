@@ -55,7 +55,7 @@ test.describe('Home Page', () => {
 
     await page.setInputFiles('[data-testid="file-upload-input"]', INVALID_ASSESSMENT_RESULT_PATH);
 
-    await page.click('[data-testid="file-upload-button"]');
+    await page.click('[data-testid="upload-button-navbar"]');
 
     validationResult = page.locator('[data-testid="validation-result-Display"]');
     await expect(validationResult).toBeVisible();
@@ -78,7 +78,7 @@ test.describe('Home Page', () => {
     await page.click('[data-testid="file-upload-button"]');
     await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
 
-    const fileUploadButton = page.locator('[data-testid="file-upload-button"]');
+    const fileUploadButton = page.locator('[data-testid="upload-button-navbar"]');
     await expect(fileUploadButton).toBeDisabled();
   });
 });

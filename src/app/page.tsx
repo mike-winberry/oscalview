@@ -1,7 +1,7 @@
-import { Container, Typography } from '@mui/material';
 import Navbar from '../components/Navbar';
-import ValidationDisplay from '../components/ValidationDisplay';
 import Footer from '../components/Footer';
+import Container from '@mui/material/Container';
+import ValidationDisplay from '../components/ValidationDisplay';
 
 export default function Home() {
   return (
@@ -9,20 +9,16 @@ export default function Home() {
       <Navbar />
       <Container
         data-testid="home-page"
+        disableGutters
+        maxWidth={false}
         sx={{
-          textAlign: 'center',
-          paddingTop: '2rem',
-          width: '100vw',
-          flex: '1 0 auto',
-          overflowY: 'auto',
+          display: 'flex',
+          flexDirection: 'column',
+          overflow: 'auto',
+          flexGrow: 1,
+          py: '10px',
         }}
       >
-        <Typography variant="h4" component="h1" gutterBottom>
-          Upload OSCAL to validate
-        </Typography>
-        <Typography color="text.secondary" variant="subtitle1" component="h2" gutterBottom>
-          supports YAML and JSON
-        </Typography>
         <ValidationDisplay />
       </Container>
       <Footer />
