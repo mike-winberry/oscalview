@@ -1,7 +1,8 @@
 import { useState } from 'react';
+import { ValidationResult } from '@/lib/types/gen';
 
 function useValidation(selectedFile: File | null) {
-  const [validationResult, setValidationResult] = useState<object | null>(null);
+  const [validationResult, setValidationResult] = useState<ValidationResult | null>(null);
   const [loading, setLoading] = useState(false);
 
   const handleValidate = async () => {
@@ -22,7 +23,7 @@ function useValidation(selectedFile: File | null) {
           });
 
           const result = await response.json();
-          setValidationResult(result);
+          setValidationResult(result as ValidationResult);
         } catch (error) {
           setValidationResult({ error: error instanceof Error ? error.message : 'Unknown error' });
         } finally {

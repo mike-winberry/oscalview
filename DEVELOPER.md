@@ -88,7 +88,7 @@ Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/bui
 - **Pre-commit**: Run formatting and linting before committing:
 
   ```bash
-  pnpm pre-commit
+  pnpm precommit
   ```
 
 - **Build WASM**: Build the WebAssembly module:
