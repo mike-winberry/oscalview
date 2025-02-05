@@ -3,17 +3,19 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "predev": "npm run build:wasm",
+    "predev": "npm run build:wasm && npm run generate:types",
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "pre-commit": "npm run format && npm run lint && npm run test:all",
+    "precommit": "npm run generate:types && npm run format && npm run lint && npm run test",
     "build:wasm": "cd wasm && make build",
     "test:playwright": "npx playwright test",
     "test:unit": "npx jest --passWithNoTests",
-    "test:all": "npm run test:unit && npm run test:playwright"
+    "test": "npm run test:unit && npm run test:playwright",
+    "generate:types": "cd internal/go-tools && go run types/main.go | npx quicktype -s schema --just-types -o ../../src/lib/types/gen.ts",
+    "prepare": "husky"
   },
   "dependencies": {
     "@emotion/cache": "^11.14.0",
@@ -31,18 +33,19 @@
     "react-svg": "^16.3.0"
   },
   "devDependencies": {
-    "@types/formidable": "^3.4.5",
     "@eslint/eslintrc": "^3.2.0",
     "@playwright/test": "^1.50.1",
     "@testing-library/dom": "^10.4.0",
     "@testing-library/jest-dom": "^6.6.3",
     "@testing-library/react": "^16.2.0",
+    "@types/formidable": "^3.4.5",
     "@types/jest": "^29.5.14",
     "@types/node": "^20.17.16",
     "@types/react": "^19.0.8",
     "@types/react-dom": "^19.0.3",
     "eslint": "^9.19.0",
     "eslint-config-next": "15.1.6",
+    "husky": "^9.1.7",
     "jest": "^29.7.0",
     "jest-environment-jsdom": "^29.7.0",
     "prettier": "^3.4.2",
