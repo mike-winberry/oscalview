@@ -25,7 +25,6 @@ function UploadButton({
       />
       {iconButton ? (
         <IconButton
-          edge="start"
           data-testid={dataTestId}
           component="label"
           htmlFor="file-upload"

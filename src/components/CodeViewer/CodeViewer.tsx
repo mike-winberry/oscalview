@@ -85,7 +85,7 @@ const FileViewer = () => {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [content, validating]);
+  }, [content, validating, selectedFile, updateFile]);
 
   return (
     <Box

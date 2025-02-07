@@ -1,9 +1,6 @@
 import { ValidationResult } from '@/lib/types/gen';
 import { UploadedFile, UploadedFileManager } from '@/lib/types/UploadedFile';
 import { useState } from 'react';
-import * as prettier from 'prettier/standalone.js';
-import babelPlugin from 'prettier/plugins/babel.js';
-import estreePlugin from 'prettier/plugins/estree.js';
 
 function useFileManager() {
   const [selectedFile, setSelectedFile] = useState<UploadedFile | undefined>(undefined);
