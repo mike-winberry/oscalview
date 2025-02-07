@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState, memo } from 'react';
 import { Box, useMediaQuery } from '@mui/material';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import { tokyoNightDay } from '@uiw/codemirror-theme-tokyo-night-day';
@@ -10,10 +10,16 @@ import { useFileValidation } from '@/context/FileValidationContext';
 import * as prettier from 'prettier/standalone.js';
 import babelPlugin from 'prettier/plugins/babel.js';
 import estreePlugin from 'prettier/plugins/estree.js';
+import yamlPlugin from 'prettier/plugins/yaml.js';
 import './CodeEditor.css';
 
 loadLanguage('yaml');
 loadLanguage('json');
+
+// Memoizes the CodeMirror component to prevent unnecessary re-renders
+const MemoizedCodeMirror = memo(CodeMirror, (prevProps, nextProps) => {
+  return prevProps.value === nextProps.value;
+});
 
 const CodeEditor = () => {
   // Context
@@ -29,53 +35,65 @@ const CodeEditor = () => {
   const previousFileRef = useRef<UploadedFile | undefined>(undefined);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
 
-  const prettify = useCallback(async (content: string, name: string) => {
-    try {
-      if (name.includes('json')) {
-        setFileExtension('json');
-        return await prettier.format(content, {
-          parser: 'json',
-          plugins: [babelPlugin, estreePlugin],
+  // runs prettier and sets the file extension and validation result if prettier fails
+  const prettify = useCallback(
+    async (content: string, name: string) => {
+      let fileExtension = '';
+      let result = '';
+      let validationResult = '';
+      try {
+        fileExtension = name.includes('json') ? 'json' : 'yaml';
+        result = await prettier.format(content, {
+          parser: fileExtension,
+          plugins: [babelPlugin, estreePlugin, yamlPlugin],
+          indentStyle: 'space',
+          indentWidth: 5,
         });
-      } else {
-        setFileExtension('yaml');
-        return content;
+      } catch (error) {
+        if (error instanceof Error) {
+          validationResult = JSON.stringify(error.message, null, 2);
+          result = content;
+        }
       }
-    } catch (error) {
-      setValidationResult(JSON.stringify(error, null, 2));
-      return content;
-    }
-  }, []);
+      setFileExtension(fileExtension);
+      setValidationResult(validationResult);
+      return result;
+    },
+    [setFileExtension, setValidationResult]
+  );
 
-  // Runs when the selectedFile content changes
+  // Runs when the selectedFile changes
   useEffect(() => {
-    if (selectedFile && selectedFile.content !== previousFileRef.current?.content) {
-      handleValidate();
-      previousFileRef.current = selectedFile;
-    }
-  }, [selectedFile, selectedFile?.content, handleValidate]);
-
-  // Sets the content when the selectedFile changes
-  useEffect(() => {
-    if (selectedFile) {
-      prettify(selectedFile.content || '', selectedFile.name || '').then((content) => {
+    // Prettifies the content when the selectedFile changes
+    if (selectedFile?.content !== undefined && selectedFile.content !== previousFileRef.current?.content) {
+      prettify(selectedFile?.content || '', selectedFile?.name || '').then((content) => {
         setContent(content);
       });
+      // Validates the content when the selectedFile changes
+      if (selectedFile && selectedFile.content !== previousFileRef.current?.content) {
+        handleValidate();
+        previousFileRef.current = selectedFile;
+      }
     }
-  }, [selectedFile?.content, selectedFile, prettify]);
+  }, [selectedFile, prettify, handleValidate]);
 
   // Sets the validation result when the selectedFile validationResult changes
   useEffect(() => {
     if (selectedFile?.validationResult) {
       setValidationResult(JSON.stringify(selectedFile?.validationResult, null, 2));
     }
-  }, [selectedFile?.validationResult]);
+  }, [selectedFile]);
 
   // Debounces the content update
   useEffect(() => {
-    if (debounceRef.current) {
-      clearTimeout(debounceRef.current);
+    // If the debounceRef is not null or the validating state is true, clear the timeout
+    // to prevent another validation from running while the first one is still running
+    if (debounceRef.current !== null || validating === true) {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
     }
+    // Debounces the content update
     debounceRef.current = setTimeout(() => {
       updateFile({
         ...selectedFile,
@@ -88,7 +106,7 @@ const CodeEditor = () => {
         clearTimeout(debounceRef.current);
       }
     };
-  }, [content, validating, selectedFile, updateFile]);
+  }, [content, validating, updateFile, selectedFile]);
 
   return (
     <Box
@@ -101,7 +119,7 @@ const CodeEditor = () => {
       }}
     >
       {fileExtension === 'json' ? (
-        <CodeMirror
+        <MemoizedCodeMirror
           value={content}
           data-testid="code-editor-display"
           theme={isDark ? tokyoNight : tokyoNightDay}
@@ -111,7 +129,7 @@ const CodeEditor = () => {
           }}
         />
       ) : (
-        <CodeMirror
+        <MemoizedCodeMirror
           value={content}
           data-testid="code-editor-display"
           theme={isDark ? tokyoNight : tokyoNightDay}
@@ -121,7 +139,7 @@ const CodeEditor = () => {
           }}
         />
       )}
-      <CodeMirror
+      <MemoizedCodeMirror
         data-testid="validation-result-display"
         style={{
           flexGrow: 1,
