@@ -19,7 +19,7 @@ export default function Navbar() {
         <Image src="/oscalot_name.svg" alt="Oscalot Name" width={100} height={40} />
         <Box sx={{ flex: '1 0 auto', ml: '20px' }}>
           {selectedFile ? (
-            <FileTab fileName={selectedFile.name} />
+            <FileTab fileName={selectedFile.name ?? ''} />
           ) : (
             <Typography variant="h6">No file selected</Typography>
           )}

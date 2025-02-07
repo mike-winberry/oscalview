@@ -1,0 +1,18 @@
+.cm-editor {
+  display: flex;
+  min-height: 100%;
+  min-width: 100%;
+  overflow: hidden;
+  flex-grow: 1;
+}
+
+.cm-theme {
+  @media (max-width: 768px) {
+    width: 100%;
+  }
+  @media (min-width: 768px) {
+    width: 50%;
+  }
+  flex-grow: 1;
+  display: flex;
+}

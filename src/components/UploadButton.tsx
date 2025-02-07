@@ -11,7 +11,8 @@ function UploadButton({
   iconButton?: boolean;
   dataTestId?: string;
 }) {
-  const { handleFileChange, loading } = useFileValidation();
+  const { handleFileUpload, uploading, validating } = useFileValidation();
+  const disabled = uploading || validating;
   return (
     <>
       <input
@@ -20,7 +21,7 @@ function UploadButton({
         style={{ display: 'none' }}
         id="file-upload"
         type="file"
-        onChange={handleFileChange}
+        onChange={handleFileUpload}
       />
       {iconButton ? (
         <IconButton
@@ -28,7 +29,7 @@ function UploadButton({
           data-testid={dataTestId}
           component="label"
           htmlFor="file-upload"
-          disabled={loading}
+          disabled={disabled}
           title="Upload File"
         >
           <UploadFile />
@@ -41,6 +42,7 @@ function UploadButton({
           variant="contained"
           htmlFor="file-upload"
           title="Upload File"
+          disabled={disabled}
         >
           Upload
         </Button>
