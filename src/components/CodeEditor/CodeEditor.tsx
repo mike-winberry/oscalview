@@ -116,6 +116,9 @@ const CodeEditor = () => {
           data-testid="code-editor-display"
           theme={isDark ? tokyoNight : tokyoNightDay}
           extensions={[basicSetup(), langs.yaml()]}
+          onChange={(value) => {
+            setContent(value);
+          }}
         />
       )}
       <CodeMirror
