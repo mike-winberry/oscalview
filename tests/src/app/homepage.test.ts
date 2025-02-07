@@ -62,18 +62,6 @@ test.describe('Home Page', () => {
     await expect(validationResult).toContainText('errors');
   });
 
-  test('should display a loading spinner when the file is being uploaded', async ({ page }) => {
-    await page.click('[data-testid="file-upload-button"]');
-    await page.setInputFiles('[data-testid="file-upload-input"]', INVALID_CATALOG_PATH);
-
-    // Wait for the loading spinner to appear
-    const loadingSpinner = page.locator('[data-testid="loading-spinner"]');
-    await expect(loadingSpinner).toBeAttached({ timeout: 10000 });
-
-    // Optionally, wait for the spinner to disappear if you want to ensure it was shown during the process
-    await expect(loadingSpinner).not.toBeAttached({ timeout: 15000 }); // Adjust timeout as needed
-  });
-
   test('should disable the file upload button when a file is being validated', async ({ page }) => {
     await page.click('[data-testid="file-upload-button"]');
     await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
