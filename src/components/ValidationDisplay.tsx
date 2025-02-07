@@ -2,7 +2,7 @@
 
 import Image from 'next/image';
 import Box from '@mui/material/Box';
-import FileViewer from './CodeViewer/CodeViewer';
+import CodeEditor from './CodeEditor/CodeEditor';
 import UploadButton from './UploadButton';
 import Container from '@mui/material/Container';
 import Typography from '@mui/material/Typography';
@@ -46,12 +46,19 @@ export default function ValidationDisplay() {
         <Container
           maxWidth={false}
           disableGutters
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', flexGrow: 1 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexGrow: 1,
+            height: '100%',
+            width: '100%',
+          }}
         >
-          <CircularProgress data-testid="loading-spinner" />
+          <CircularProgress size={100} data-testid="loading-spinner" />
         </Container>
       )}
-      {selectedFile && !uploading && <FileViewer />}
+      {selectedFile && !uploading && <CodeEditor />}
     </>
   );
 }

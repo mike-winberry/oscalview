@@ -10,18 +10,19 @@ import { useFileValidation } from '@/context/FileValidationContext';
 import * as prettier from 'prettier/standalone.js';
 import babelPlugin from 'prettier/plugins/babel.js';
 import estreePlugin from 'prettier/plugins/estree.js';
-import './codeViewer.css';
+import './CodeEditor.css';
 
 loadLanguage('yaml');
 loadLanguage('json');
 
-const FileViewer = () => {
+const CodeEditor = () => {
   // Context
   const { selectedFile, handleValidate, validating, updateFile } = useFileValidation();
   const isDark = useMediaQuery('(prefers-color-scheme: dark)');
 
   // States
   const [content, setContent] = useState('');
+  const [fileExtension, setFileExtension] = useState('');
   const [validationResult, setValidationResult] = useState('');
 
   // Refs
@@ -31,11 +32,13 @@ const FileViewer = () => {
   const prettify = useCallback(async (content: string, name: string) => {
     try {
       if (name.includes('json')) {
+        setFileExtension('json');
         return await prettier.format(content, {
           parser: 'json',
           plugins: [babelPlugin, estreePlugin],
         });
       } else {
+        setFileExtension('yaml');
         return content;
       }
     } catch (error) {
@@ -97,16 +100,24 @@ const FileViewer = () => {
         height: '100%',
       }}
     >
-      <CodeMirror
-        value={content}
-        data-testid="code-editor-display"
-        theme={isDark ? tokyoNight : tokyoNightDay}
-        extensions={[basicSetup({ indentOnInput: true }), langs.yaml(), langs.json()]}
-        onChange={(value) => {
-          setContent(value);
-        }}
-      />
-
+      {fileExtension === 'json' ? (
+        <CodeMirror
+          value={content}
+          data-testid="code-editor-display"
+          theme={isDark ? tokyoNight : tokyoNightDay}
+          extensions={[basicSetup(), langs.json()]}
+          onChange={(value) => {
+            setContent(value);
+          }}
+        />
+      ) : (
+        <CodeMirror
+          value={content}
+          data-testid="code-editor-display"
+          theme={isDark ? tokyoNight : tokyoNightDay}
+          extensions={[basicSetup(), langs.yaml()]}
+        />
+      )}
       <CodeMirror
         data-testid="validation-result-display"
         style={{
@@ -117,10 +128,10 @@ const FileViewer = () => {
         editable={false}
         value={validating ? 'Running validation...' : validationResult}
         theme={isDark ? tokyoNight : tokyoNightDay}
-        extensions={[basicSetup(), langs.json(), langs.yaml()]}
+        extensions={[basicSetup(), langs.json()]}
       />
     </Box>
   );
 };
 
-export default FileViewer;
+export default CodeEditor;
