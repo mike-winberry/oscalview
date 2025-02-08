@@ -3,6 +3,7 @@ import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import { loadWasmModule } from '@/lib/wasm/wasm';
 
+export const dynamic = 'force-dynamic'; // force dynamic rendering to avoid nextjs caching issues
 export const config = {
   api: {
     bodyParser: false, // Disable Next.js default body parser
