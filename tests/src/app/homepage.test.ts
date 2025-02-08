@@ -7,7 +7,6 @@ const VALID_COMPONENT_DEFINITION_PATH = path.join(
 );
 const INVALID_ASSESSMENT_RESULT_PATH = path.join(__dirname, '../../../test-data/oscal/invalid-assessment-result.yaml');
 const EMPTY_PATH = path.join(__dirname, '../../../test-data/oscal/empty.json');
-const INVALID_CATALOG_PATH = path.join(__dirname, '../../../test-data/oscal/invalid-catalog.yaml');
 test.describe('Home Page', () => {
   test.beforeEach(async ({ page }) => {
     await page.goto('http://localhost:3000');

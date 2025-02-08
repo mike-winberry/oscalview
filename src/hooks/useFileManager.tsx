@@ -51,6 +51,7 @@ function useFileManager() {
       const response = await fetch('/api/validate', {
         method: 'POST',
         body: formData,
+        cache: 'no-store',
       });
       const result = await response.json();
       updateFile({
