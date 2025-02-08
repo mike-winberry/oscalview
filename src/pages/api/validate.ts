@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import { loadWasmModule } from '@/lib/wasm/wasm';
@@ -11,8 +12,10 @@ export const config = {
 let wasmExports: WebAssembly.Exports | undefined;
 
 async function initWasm() {
-  if (!wasmExports) {
-    wasmExports = await loadWasmModule();
+  if (!wasmExports || (globalThis as any).go?.exited) {
+    // Ensure the Go instance is created with 'new'
+    const go = new (globalThis as any).Go();
+    wasmExports = await loadWasmModule(go);
   }
 }
 
@@ -46,7 +49,6 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'No data provided' });
     }
 
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = (globalThis as any).validateOscal(data);
     return res.status(200).json(result);
   } catch (error) {
