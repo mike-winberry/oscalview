@@ -29,14 +29,6 @@ func validateOscal(this js.Value, p []js.Value) interface{} {
 		inputString = p[0].String()
 	}
 
-	// semverPattern := `(?:\"?oscal-version\"?:\s*\"?(\d+\.\d+\.\d+)\"?)`
-
-	// re := regexp.MustCompile(semverPattern)
-
-	// if !re.MatchString(inputString) {
-	// 	return js.ValueOf(map[string]interface{}{"error": "missing required metadata field oscal-version"})
-	// }
-
 	inputBytes := []byte(inputString)
 
 	// Create a new validator
