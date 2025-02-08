@@ -1,16 +1,17 @@
 'use client';
+import Image from 'next/image';
+import FileTab from './FileTab';
+import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
+import UploadButton from './UploadButton';
 import Toolbar from '@mui/material/Toolbar';
 import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
 import DownloadIcon from '@mui/icons-material/Download';
-import Image from 'next/image';
-import UploadButton from './UploadButton';
-import FileTab from './FileTab';
-import { useFileValidation } from '@/context/FileValidationContext';
-import Box from '@mui/material/Box';
 import { UploadedFile } from '@/lib/types/UploadedFile';
+import { useFileValidation } from '@/context/FileValidationContext';
+
 const handleDownload = (selectedFile: UploadedFile) => {
   if (!selectedFile) return;
 
