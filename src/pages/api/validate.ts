@@ -13,7 +13,6 @@ let wasmExports: WebAssembly.Exports | undefined;
 
 async function initWasm() {
   if (!wasmExports || (globalThis as any).go?.exited) {
-    // Ensure the Go instance is created with 'new'
     const go = new (globalThis as any).Go();
     wasmExports = await loadWasmModule(go);
   }
