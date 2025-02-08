@@ -69,13 +69,16 @@ const CodeEditor = () => {
       prettify(selectedFile?.content || '', selectedFile?.name || '').then((content) => {
         setContent(content);
       });
-      // Validates the content when the selectedFile changes
-      if (selectedFile && selectedFile.content !== previousFileRef.current?.content) {
-        handleValidate();
-        previousFileRef.current = selectedFile;
-      }
     }
   }, [selectedFile, prettify, handleValidate]);
+
+  // Validates the content when the selectedFile changes
+  useEffect(() => {
+    if (!validating && selectedFile && selectedFile.content !== previousFileRef.current?.content) {
+      handleValidate();
+      previousFileRef.current = selectedFile;
+    }
+  }, [selectedFile, handleValidate, validating]);
 
   // Sets the validation result when the selectedFile validationResult changes
   useEffect(() => {
