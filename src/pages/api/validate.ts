@@ -1,9 +1,12 @@
-/* eslint-disable @typescript-eslint/no-explicit-any */
+'use server';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import { loadWasmModule } from '@/lib/wasm/wasm';
 
-export const dynamic = 'force-dynamic'; // force dynamic rendering to avoid nextjs caching issues
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
+
 export const config = {
   api: {
     bodyParser: false, // Disable Next.js default body parser
@@ -13,9 +16,8 @@ export const config = {
 let wasmExports: WebAssembly.Exports | undefined;
 
 async function initWasm() {
-  if (!wasmExports || (globalThis as any).go?.exited) {
-    const go = new (globalThis as any).Go();
-    wasmExports = await loadWasmModule(go);
+  if (!wasmExports) {
+    wasmExports = await loadWasmModule();
   }
 }
 
@@ -23,6 +25,10 @@ async function initWasm() {
 // res: { ...validationResult, error?: string }
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await initWasm();
+
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Expires', '0');
+  res.setHeader('Pragma', 'no-cache');
 
   if (!wasmExports) {
     return res.status(500).json({ error: 'Failed to load WASM module' });
@@ -49,6 +55,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
       return res.status(400).json({ error: 'No data provided' });
     }
 
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const result = (globalThis as any).validateOscal(data);
     return res.status(200).json(result);
   } catch (error) {

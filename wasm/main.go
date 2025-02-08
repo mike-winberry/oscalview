@@ -13,6 +13,12 @@ import (
 )
 
 func validateOscal(this js.Value, p []js.Value) interface{} {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic:", r)
+		}
+	}()
+
 	// Check if the input is an array and extract the first element
 	// Formidable returns an array of objects, so we need to extract the first element
 	// will also allow for future use of multiple files implementations
@@ -22,6 +28,14 @@ func validateOscal(this js.Value, p []js.Value) interface{} {
 	} else {
 		inputString = p[0].String()
 	}
+
+	// semverPattern := `(?:\"?oscal-version\"?:\s*\"?(\d+\.\d+\.\d+)\"?)`
+
+	// re := regexp.MustCompile(semverPattern)
+
+	// if !re.MatchString(inputString) {
+	// 	return js.ValueOf(map[string]interface{}{"error": "missing required metadata field oscal-version"})
+	// }
 
 	inputBytes := []byte(inputString)
 
