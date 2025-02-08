@@ -13,6 +13,12 @@ import (
 )
 
 func validateOscal(this js.Value, p []js.Value) interface{} {
+	defer func() {
+		if r := recover(); r != nil {
+			fmt.Println("Recovered from panic:", r)
+		}
+	}()
+
 	// Check if the input is an array and extract the first element
 	// Formidable returns an array of objects, so we need to extract the first element
 	// will also allow for future use of multiple files implementations

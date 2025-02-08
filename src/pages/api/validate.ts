@@ -1,6 +1,11 @@
+'use server';
+
 import type { NextApiRequest, NextApiResponse } from 'next';
 import formidable from 'formidable';
 import { loadWasmModule } from '@/lib/wasm/wasm';
+
+export const dynamic = 'force-dynamic';
+export const revalidate = 0;
 
 export const config = {
   api: {
@@ -20,6 +25,10 @@ async function initWasm() {
 // res: { ...validationResult, error?: string }
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
   await initWasm();
+
+  res.setHeader('Cache-Control', 'no-store, no-cache, must-revalidate, proxy-revalidate');
+  res.setHeader('Expires', '0');
+  res.setHeader('Pragma', 'no-cache');
 
   if (!wasmExports) {
     return res.status(500).json({ error: 'Failed to load WASM module' });
