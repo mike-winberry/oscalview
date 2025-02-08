@@ -1,30 +1,21 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
-import Typography from '@mui/material/Typography';
-import { useFileValidation } from '@/context/FileValidationContext';
-import CircularProgress from '@mui/material/CircularProgress';
 import Image from 'next/image';
 import Box from '@mui/material/Box';
-import ExampleFilesLink from '@/components/ExampleFilesLink';
+import CodeEditor from './CodeEditor/CodeEditor';
 import UploadButton from './UploadButton';
-import JsonViewer from './JsonViewer';
 import Container from '@mui/material/Container';
-import { themes } from 'prism-react-renderer';
-export default function ValidationDisplay() {
-  const { selectedFile, handleValidate, loading, validationResult } = useFileValidation();
-  const previousFileRef = useRef<File | null>(null);
+import Typography from '@mui/material/Typography';
+import ExampleFilesLink from '@/components/ExampleFilesLink';
+import CircularProgress from '@mui/material/CircularProgress';
+import { useFileValidation } from '@/context/FileValidationContext';
 
-  useEffect(() => {
-    if (selectedFile && selectedFile !== previousFileRef.current) {
-      handleValidate();
-      previousFileRef.current = selectedFile;
-    }
-  }, [selectedFile, handleValidate]);
+export default function ValidationDisplay() {
+  const { selectedFile, uploading } = useFileValidation();
 
   return (
     <>
-      {!selectedFile && (
+      {!selectedFile && !uploading && (
         <Box
           sx={{
             display: 'flex',
@@ -32,6 +23,7 @@ export default function ValidationDisplay() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
+            overflow: 'auto',
             gap: '10px',
           }}
         >
@@ -50,29 +42,23 @@ export default function ValidationDisplay() {
           </Box>
         </Box>
       )}
-      {loading && (
+      {uploading && (
         <Container
           maxWidth={false}
           disableGutters
-          sx={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100%', flexGrow: 1 }}
+          sx={{
+            display: 'flex',
+            justifyContent: 'center',
+            alignItems: 'center',
+            flexGrow: 1,
+            height: '100%',
+            width: '100%',
+          }}
         >
-          <CircularProgress data-testid="loading-spinner" />
+          <CircularProgress size={100} data-testid="loading-spinner" />
         </Container>
       )}
-      {validationResult && !loading && (
-        <Box
-          sx={{
-            padding: '10px',
-            display: 'flex',
-            flexDirection: 'column',
-            flexGrow: 1,
-            backgroundColor: themes.shadesOfPurple.plain.backgroundColor,
-          }}
-          data-testid="validation-result-Display"
-        >
-          <JsonViewer code={JSON.stringify(validationResult, null, 2)} />
-        </Box>
-      )}
+      {selectedFile && !uploading && <CodeEditor />}
     </>
   );
 }

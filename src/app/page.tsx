@@ -14,9 +14,8 @@ export default function Home() {
         sx={{
           display: 'flex',
           flexDirection: 'column',
-          overflow: 'auto',
+          overflow: 'hidden',
           flexGrow: 1,
-          py: '10px',
         }}
       >
         <ValidationDisplay />
