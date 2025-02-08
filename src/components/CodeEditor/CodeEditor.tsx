@@ -5,16 +5,13 @@ import { tokyoNightDay } from '@uiw/codemirror-theme-tokyo-night-day';
 import CodeMirror from '@uiw/react-codemirror';
 import { basicSetup } from '@uiw/codemirror-extensions-basic-setup';
 import { UploadedFile } from '@/lib/types/UploadedFile';
-import { langs, loadLanguage } from '@uiw/codemirror-extensions-langs';
+import { langs } from '@uiw/codemirror-extensions-langs';
 import { useFileValidation } from '@/context/FileValidationContext';
 import * as prettier from 'prettier/standalone.js';
 import babelPlugin from 'prettier/plugins/babel.js';
 import estreePlugin from 'prettier/plugins/estree.js';
 import yamlPlugin from 'prettier/plugins/yaml.js';
 import './CodeEditor.css';
-
-loadLanguage('yaml');
-loadLanguage('json');
 
 // Memoizes the CodeMirror component to prevent unnecessary re-renders
 const MemoizedCodeMirror = memo(CodeMirror, (prevProps, nextProps) => {
