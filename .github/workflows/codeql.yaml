@@ -32,13 +32,15 @@ jobs:
         with:
           languages: ${{ matrix.language }}
 
+      # Manually build the Go code
+      # /dev/null builds without output
+      - name: Build Go Types
+        run: |
+          cd internal/go-tools/types
+          go build -o /dev/null main.go
+
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
-
-      # If the Autobuild fails, you may need to manually build your Go code
-      # Uncomment and modify the following lines if necessary
-      #- run: |
-      #   go build ./...
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
