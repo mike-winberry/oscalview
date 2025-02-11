@@ -20,8 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        language: ['javascript', 'typescript', 'go']
-        # Add 'go' to the list of languages
+        language: ['typescript', 'go']
 
     steps:
       - name: Checkout repository
@@ -34,12 +33,6 @@ jobs:
 
       - name: Autobuild
         uses: github/codeql-action/autobuild@v3
-
-      # If the Autobuild fails, you may need to manually build your Go code
-      # Uncomment and modify the following lines if necessary
-      - run: |
-          cd wasm
-          GOOS=linux GOARCH=amd64 go build -o /dev/null main.go
 
       - name: Perform CodeQL Analysis
         uses: github/codeql-action/analyze@v3
