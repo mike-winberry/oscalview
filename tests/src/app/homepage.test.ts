@@ -103,8 +103,8 @@ test.describe('Home Page', () => {
 
     await fileListItems[0].click();
 
-    expect(await fileListItems[0].getAttribute('aria-selected')).toBe('true');
-    expect(await fileListItems[1].getAttribute('aria-selected')).toBe('false');
+    expect(await fileListItems[0].getAttribute('aria-selected', { timeout: 1000 })).toBe('true');
+    expect(await fileListItems[1].getAttribute('aria-selected', { timeout: 1000 })).toBe('false');
   });
 
   test('should delete a file from the file list', async ({ page }) => {
