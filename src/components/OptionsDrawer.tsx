@@ -37,7 +37,7 @@ const StyledListItemButton = styled(ListItemButton)({
 });
 
 export default function OptionsDrawer() {
-  const { selectedFile, deleteFile, handleFileUpload, uploading } = useFileValidation();
+  const { selectedFile, deleteFile, handleFileUpload, uploading, validating } = useFileValidation();
   const [open, setOpen] = useState(false);
   const [drawerWidth, setDrawerWidth] = useState(56);
 
@@ -112,7 +112,7 @@ export default function OptionsDrawer() {
           <StyledListItemButton
             data-testid="upload-button-options-drawer"
             onClick={() => handleAction('upload')}
-            disabled={uploading}
+            disabled={uploading || validating}
           >
             <Tooltip title="Upload File">
               <StyledListItemIcon>
