@@ -91,6 +91,7 @@ export default function OptionsDrawer() {
     >
       <input
         data-testid="options-drawer-file-upload"
+        id="options-drawer-file-upload"
         type="file"
         style={{ display: 'none' }}
         onChange={handleFileUpload}
