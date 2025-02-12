@@ -19,7 +19,6 @@ function useFileManager() {
 
   function addFile(file: UploadedFile) {
     const hasFile = files.some((f) => f.name === file.name);
-    console.log('hasFile', hasFile);
     if (hasFile) {
       updateFile(file);
     } else {
@@ -53,6 +52,8 @@ function useFileManager() {
         setUploading(false);
       };
       reader.readAsText(file);
+      // Reset the file input value to allow selecting the same file again
+      event.target.value = '';
     }
   }
 

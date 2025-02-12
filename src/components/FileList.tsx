@@ -27,6 +27,7 @@ function FileList() {
         isSmallScreen ? (
           <Select
             sx={{ mx: 'auto', px: 1 }}
+            data-testid="file-list"
             value={selectedFileIndex}
             onChange={(event: SelectChangeEvent<number>) => {
               setSelectedFile(files[event.target.value as number] || files[0]);
@@ -45,6 +46,7 @@ function FileList() {
           </Select>
         ) : (
           <Tabs
+            data-testid="file-list"
             value={selectedFileIndex}
             onChange={(_, value) => {
               if (validating) return;
@@ -64,7 +66,9 @@ function FileList() {
           </Tabs>
         )
       ) : (
-        <Typography variant="h6">No file selected</Typography>
+        <Typography data-testid="no-file-selected" variant="h6" sx={{ marginY: 'auto', ml: 4 }}>
+          No file selected
+        </Typography>
       )}
     </>
   );

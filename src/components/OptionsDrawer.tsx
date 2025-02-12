@@ -140,7 +140,7 @@ export default function OptionsDrawer() {
           <StyledListItemButton
             data-testid="delete-button-options-drawer"
             onClick={() => handleAction('delete')}
-            disabled={!selectedFile}
+            disabled={uploading || validating || !selectedFile}
           >
             <Tooltip title="Delete Selected File">
               <StyledListItemIcon>
