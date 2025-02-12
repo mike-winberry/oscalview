@@ -3,22 +3,45 @@ import { UploadedFile } from '@/lib/types/UploadedFile';
 import useFileManager from '@/hooks/useFileManager';
 
 interface FileValidationContextProps {
-  selectedFile: UploadedFile | undefined;
-  handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   handleValidate: () => void;
-  updateFile: (file: UploadedFile) => void;
   uploading: boolean;
   validating: boolean;
+  files: UploadedFile[];
+  updateFile: (file: UploadedFile) => void;
+  deleteFile: (file: UploadedFile) => void;
+  setSelectedFile: (file: UploadedFile) => void;
+  selectedFile: UploadedFile | null;
+  handleFileUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const FileValidationContext = createContext<FileValidationContextProps | undefined>(undefined);
 
 export const FileValidationProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
-  const { handleFileUpload, selectedFile, updateFile, uploading, validating, handleValidate } = useFileManager();
+  const {
+    handleFileUpload,
+    selectedFile,
+    updateFile,
+    uploading,
+    validating,
+    handleValidate,
+    files,
+    setSelectedFile,
+    deleteFile,
+  } = useFileManager();
 
   return (
     <FileValidationContext.Provider
-      value={{ selectedFile, handleFileUpload, handleValidate, uploading, validating, updateFile }}
+      value={{
+        files,
+        uploading,
+        validating,
+        updateFile,
+        deleteFile,
+        selectedFile,
+        handleValidate,
+        setSelectedFile,
+        handleFileUpload,
+      }}
     >
       {children}
     </FileValidationContext.Provider>

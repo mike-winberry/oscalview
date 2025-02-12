@@ -1,28 +1,42 @@
 import { ValidationResult } from '@/lib/types/gen';
-import { UploadedFile, UploadedFileManager } from '@/lib/types/UploadedFile';
-import { useState } from 'react';
+import { UploadedFile } from '@/lib/types/UploadedFile';
+import { useCallback, useState } from 'react';
 
 function useFileManager() {
-  const [selectedFile, setSelectedFile] = useState<UploadedFile | undefined>(undefined);
+  const [selectedFile, setSelectedFile] = useState<UploadedFile | null>(null);
   const [uploading, setUploading] = useState(false);
   const [validating, setValidating] = useState(false);
-  const fileManager = new UploadedFileManager();
+  const [files, setFiles] = useState<UploadedFile[]>([]);
 
-  const addFile = (file: UploadedFile) => {
-    fileManager.addFile(file);
-    setSelectedFile(file);
-  };
-
-  const updateFile = (file: UploadedFile): UploadedFile | undefined => {
+  function updateFile(file: UploadedFile): UploadedFile | undefined {
     if (file.name) {
-      fileManager.updateFile(file.name, file);
-      setSelectedFile(file);
+      setFiles((prevFiles) => [...prevFiles.map((f) => (f.name === file.name ? file : f))]);
+      setSelectedFile({ ...file });
       return file;
     }
     return undefined;
-  };
+  }
 
-  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+  function addFile(file: UploadedFile) {
+    const hasFile = files.some((f) => f.name === file.name);
+    console.log('hasFile', hasFile);
+    if (hasFile) {
+      updateFile(file);
+    } else {
+      setFiles((prevFiles) => [...prevFiles, file]);
+      setSelectedFile(file);
+    }
+  }
+
+  function deleteFile(file: UploadedFile) {
+    setFiles((prevFiles) => {
+      const updatedFiles = prevFiles.filter((f) => f.name !== file.name);
+      setSelectedFile(updatedFiles.length > 0 ? updatedFiles[updatedFiles.length - 1] : null);
+      return updatedFiles;
+    });
+  }
+
+  function handleFileUpload(event: React.ChangeEvent<HTMLInputElement>) {
     if (event.target.files && event.target.files.length > 0) {
       setUploading(true);
       const file = event.target.files[0];
@@ -40,9 +54,9 @@ function useFileManager() {
       };
       reader.readAsText(file);
     }
-  };
+  }
 
-  const handleValidate = async () => {
+  const handleValidate = useCallback(async () => {
     if (!selectedFile) return;
     setValidating(true);
     try {
@@ -66,9 +80,20 @@ function useFileManager() {
     } finally {
       setValidating(false);
     }
-  };
+  }, [selectedFile, updateFile]);
 
-  return { handleFileUpload, addFile, selectedFile, updateFile, uploading, validating, handleValidate };
+  return {
+    files,
+    addFile,
+    uploading,
+    updateFile,
+    validating,
+    deleteFile,
+    selectedFile,
+    handleValidate,
+    setSelectedFile,
+    handleFileUpload,
+  };
 }
 
 export default useFileManager;

@@ -52,9 +52,9 @@ test.describe('Home Page', () => {
     await expect(validationResult).toBeVisible();
     await expect(validationResult).toContainText('"valid": true');
 
-    await page.setInputFiles('[data-testid="file-upload-input"]', INVALID_ASSESSMENT_RESULT_PATH);
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
 
-    await page.click('[data-testid="upload-button-navbar"]');
+    await page.click('[data-testid="upload-button-options-drawer"]');
 
     validationResult = page.locator('[data-testid="validation-result-display"]');
     await expect(validationResult).toBeVisible();
@@ -62,10 +62,10 @@ test.describe('Home Page', () => {
   });
 
   test('should disable the file upload button when a file is being validated', async ({ page }) => {
-    await page.click('[data-testid="file-upload-button"]');
-    await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', VALID_COMPONENT_DEFINITION_PATH);
 
-    const fileUploadButton = page.locator('[data-testid="upload-button-navbar"]');
+    const fileUploadButton = page.locator('[data-testid="upload-button-options-drawer"]');
     await expect(fileUploadButton).toBeDisabled();
   });
 });

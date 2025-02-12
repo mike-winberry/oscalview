@@ -1,74 +1,31 @@
 'use client';
 import Image from 'next/image';
-import FileTab from './FileTab';
+import FileList from './FileList';
 import Box from '@mui/material/Box';
 import AppBar from '@mui/material/AppBar';
-import UploadButton from './UploadButton';
 import Toolbar from '@mui/material/Toolbar';
-import Typography from '@mui/material/Typography';
 import IconButton from '@mui/material/IconButton';
 import GitHubIcon from '@mui/icons-material/GitHub';
-import DownloadIcon from '@mui/icons-material/Download';
-import { UploadedFile } from '@/lib/types/UploadedFile';
-import { useFileValidation } from '@/context/FileValidationContext';
-
-const handleDownload = (selectedFile: UploadedFile) => {
-  if (!selectedFile) return;
-
-  // Create a blob from the file content or description
-  const blob = new Blob([selectedFile.content || selectedFile.file?.name || ''], {
-    type: 'text/plain;charset=utf-8',
-  });
-
-  // Create a link element
-  const link = document.createElement('a');
-  link.href = URL.createObjectURL(blob);
-  link.download = selectedFile.name || 'download.txt';
-
-  // Append to the body, click and remove it
-  document.body.appendChild(link);
-  link.click();
-  document.body.removeChild(link);
-};
 
 export default function Navbar() {
-  const { selectedFile } = useFileValidation();
   return (
-    <AppBar position="static" elevation={8}>
+    <AppBar position="static" elevation={8} sx={{ maxWidth: '100vw', overflow: 'hidden' }}>
       <Toolbar>
-        <Image src="/oscalot.svg" alt="Oscalot Logo" width={40} height={40} />
-        <Image src="/oscalot_name.svg" alt="Oscalot Name" width={100} height={40} />
-        <Box sx={{ flex: '1 0 auto', ml: '20px', display: 'flex', justifyContent: 'start' }}>
-          {selectedFile ? (
-            <>
-              <FileTab fileName={selectedFile.name ?? ''} />
-            </>
-          ) : (
-            <Typography variant="h6">No file selected</Typography>
-          )}
+        <Box sx={{ display: 'flex', justifyContent: 'start' }}>
+          <Image src="/oscalot.svg" alt="Oscalot Logo" width={40} height={40} />
+          <Image src="/oscalot_name.svg" alt="Oscalot Name" width={100} height={40} />
         </Box>
-        <IconButton
-          title={`Download ${selectedFile?.name ?? 'File'}`}
-          color="inherit"
-          disabled={!selectedFile}
-          sx={{ ml: '40px' }}
-          onClick={() => {
-            if (selectedFile) {
-              handleDownload(selectedFile);
-            }
-          }}
-        >
-          <DownloadIcon />
-        </IconButton>
-        <UploadButton iconButton dataTestId="upload-button-navbar" />
-        <IconButton
-          color="inherit"
-          href="https://github.com/mike-winberry/oscalot"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <GitHubIcon />
-        </IconButton>
+        <Box sx={{ flexGrow: 1, display: 'flex', justifyContent: 'space-between' }}>
+          <FileList />
+          <IconButton
+            color="inherit"
+            href="https://github.com/mike-winberry/oscalot"
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            <GitHubIcon />
+          </IconButton>
+        </Box>
       </Toolbar>
     </AppBar>
   );

@@ -1,5 +1,5 @@
 import React, { useCallback, useEffect, useRef, useState, memo } from 'react';
-import { Box, useMediaQuery } from '@mui/material';
+import { Box, useMediaQuery, Fab } from '@mui/material';
 import { tokyoNight } from '@uiw/codemirror-theme-tokyo-night';
 import { tokyoNightDay } from '@uiw/codemirror-theme-tokyo-night-day';
 import CodeMirror from '@uiw/react-codemirror';
@@ -11,6 +11,8 @@ import * as prettier from 'prettier/standalone.js';
 import babelPlugin from 'prettier/plugins/babel.js';
 import estreePlugin from 'prettier/plugins/estree.js';
 import yamlPlugin from 'prettier/plugins/yaml.js';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import './CodeEditor.css';
 
 // Memoizes the CodeMirror component to prevent unnecessary re-renders
@@ -22,12 +24,13 @@ const CodeEditor = () => {
   // Context
   const { selectedFile, handleValidate, validating, updateFile } = useFileValidation();
   const isDark = useMediaQuery('(prefers-color-scheme: dark)');
+  const isSmallScreen = useMediaQuery((theme) => theme.breakpoints.down('md'));
 
   // States
   const [content, setContent] = useState('');
   const [fileExtension, setFileExtension] = useState('');
   const [validationResult, setValidationResult] = useState('');
-
+  const [scrollAnchor, setScrollAnchor] = useState<'top' | 'bottom'>('bottom');
   // Refs
   const previousFileRef = useRef<UploadedFile | undefined>(undefined);
   const debounceRef = useRef<NodeJS.Timeout | null>(null);
@@ -108,50 +111,79 @@ const CodeEditor = () => {
     };
   }, [content, validating, updateFile, selectedFile]);
 
+  const scrollTo = (position: 'top' | 'bottom') => {
+    const scrollContainer = document.getElementById(position === 'top' ? 'scroll-anchor-top' : 'scroll-anchor-bottom');
+    scrollContainer?.scrollIntoView({ behavior: 'smooth' });
+    if (position === 'top') {
+      setScrollAnchor('bottom');
+    } else {
+      setScrollAnchor('top');
+    }
+  };
+
   return (
-    <Box
-      sx={{
-        display: 'flex',
-        flexDirection: { xs: 'column', md: 'row' },
-        overflow: { xs: 'auto', md: 'hidden' },
-        flexGrow: 1,
-        height: '100%',
-      }}
-    >
-      {fileExtension === 'json' ? (
+    <>
+      <Box
+        sx={{
+          display: 'flex',
+          flexDirection: { xs: 'column', md: 'row' },
+          overflow: { xs: 'auto', md: 'hidden' },
+          flexGrow: 1,
+          height: '100%',
+        }}
+      >
+        <div id="scroll-anchor-top" />
+        {fileExtension === 'json' ? (
+          <MemoizedCodeMirror
+            value={content}
+            id="code-editor-display"
+            data-testid="code-editor-display"
+            theme={isDark ? tokyoNight : tokyoNightDay}
+            extensions={[basicSetup(), langs.json()]}
+            onChange={(value) => {
+              setContent(value);
+            }}
+          />
+        ) : (
+          <MemoizedCodeMirror
+            value={content}
+            data-testid="code-editor-display"
+            theme={isDark ? tokyoNight : tokyoNightDay}
+            extensions={[basicSetup(), langs.yaml()]}
+            onChange={(value) => {
+              setContent(value);
+            }}
+          />
+        )}
         <MemoizedCodeMirror
-          value={content}
-          data-testid="code-editor-display"
+          data-testid="validation-result-display"
+          style={{
+            flexGrow: 1,
+            display: 'flex',
+            flexDirection: 'column',
+          }}
+          editable={false}
+          value={validating ? 'Running validation...' : validationResult}
           theme={isDark ? tokyoNight : tokyoNightDay}
           extensions={[basicSetup(), langs.json()]}
-          onChange={(value) => {
-            setContent(value);
-          }}
         />
-      ) : (
-        <MemoizedCodeMirror
-          value={content}
-          data-testid="code-editor-display"
-          theme={isDark ? tokyoNight : tokyoNightDay}
-          extensions={[basicSetup(), langs.yaml()]}
-          onChange={(value) => {
-            setContent(value);
+        <div id="scroll-anchor-bottom" />
+      </Box>
+      {isSmallScreen && (
+        <Fab
+          color="primary"
+          aria-label="scroll"
+          onClick={() => scrollTo(scrollAnchor)}
+          sx={{
+            position: 'absolute',
+            bottom: 16,
+            right: 24,
           }}
-        />
+        >
+          {scrollAnchor === 'bottom' ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+        </Fab>
       )}
-      <MemoizedCodeMirror
-        data-testid="validation-result-display"
-        style={{
-          flexGrow: 1,
-          display: 'flex',
-          flexDirection: 'column',
-        }}
-        editable={false}
-        value={validating ? 'Running validation...' : validationResult}
-        theme={isDark ? tokyoNight : tokyoNightDay}
-        extensions={[basicSetup(), langs.json()]}
-      />
-    </Box>
+    </>
   );
 };
 
