@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitFor } from '@testing-library/react';
 import path from 'path';
 
 const VALID_COMPONENT_DEFINITION_PATH = path.join(
@@ -100,11 +101,12 @@ test.describe('Home Page', () => {
     const fileList = page.locator('[data-testid="file-list"]');
     const fileListItems = await fileList.locator('button').all();
     expect(fileListItems).toHaveLength(2);
+    expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('false');
+    expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('true');
 
     await fileListItems[0].click();
-
-    expect(await fileListItems[0].getAttribute('aria-selected', { timeout: 1000 })).toBe('true');
-    expect(await fileListItems[1].getAttribute('aria-selected', { timeout: 1000 })).toBe('false');
+    await expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('true');
+    await expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('false');
   });
 
   test('should delete a file from the file list', async ({ page }) => {
