@@ -19,9 +19,7 @@ function useFileManager() {
 
   function addFile(file: UploadedFile) {
     const hasFile = files.some((f) => f.name === file.name);
-    if (hasFile) {
-      updateFile(file);
-    } else {
+    if (!hasFile) {
       setFiles((prevFiles) => [...prevFiles, file]);
       setSelectedFile(file);
     }
