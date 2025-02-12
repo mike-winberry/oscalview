@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import { waitFor } from '@testing-library/react';
 import path from 'path';
 
 const VALID_COMPONENT_DEFINITION_PATH = path.join(
@@ -52,9 +53,9 @@ test.describe('Home Page', () => {
     await expect(validationResult).toBeVisible();
     await expect(validationResult).toContainText('"valid": true');
 
-    await page.setInputFiles('[data-testid="file-upload-input"]', INVALID_ASSESSMENT_RESULT_PATH);
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
 
-    await page.click('[data-testid="upload-button-navbar"]');
+    await page.click('[data-testid="upload-button-options-drawer"]');
 
     validationResult = page.locator('[data-testid="validation-result-display"]');
     await expect(validationResult).toBeVisible();
@@ -62,10 +63,88 @@ test.describe('Home Page', () => {
   });
 
   test('should disable the file upload button when a file is being validated', async ({ page }) => {
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', VALID_COMPONENT_DEFINITION_PATH);
+
+    const fileUploadButton = page.locator('[data-testid="upload-button-options-drawer"]');
+    await expect(fileUploadButton).toBeDisabled();
+  });
+
+  test('should display the file list when a file is uploaded', async ({ page }) => {
     await page.click('[data-testid="file-upload-button"]');
     await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
 
-    const fileUploadButton = page.locator('[data-testid="upload-button-navbar"]');
-    await expect(fileUploadButton).toBeDisabled();
+    const fileList = page.locator('[data-testid="file-list"]');
+    await expect(fileList).toBeVisible();
+    await expect(fileList).toContainText('valid-component....yaml');
+  });
+
+  test('should display more than one file in the file list', async ({ page }) => {
+    await page.click('[data-testid="file-upload-button"]');
+    await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
+
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
+
+    const fileList = page.locator('[data-testid="file-list"]');
+    const fileListItems = await fileList.locator('button').all();
+    expect(fileListItems).toHaveLength(2);
+  });
+
+  test('should switch between files in the file list', async ({ page }) => {
+    await page.click('[data-testid="file-upload-button"]');
+    await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
+
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
+
+    const fileList = page.locator('[data-testid="file-list"]');
+    const fileListItems = await fileList.locator('button').all();
+    expect(fileListItems).toHaveLength(2);
+    expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('false');
+    expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('true');
+
+    await fileListItems[0].click();
+    await expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('true');
+    await expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('false');
+  });
+
+  test('should delete a file from the file list', async ({ page }) => {
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
+
+    const deleteButton = page.locator('[data-testid="delete-button-options-drawer"]');
+    await expect(deleteButton).toBeEnabled({ timeout: 1000 });
+
+    const fileList = page.locator('[data-testid="file-list"]');
+    const fileListItems = await fileList.locator('button').all();
+    expect(fileListItems).toHaveLength(1);
+
+    await deleteButton.click();
+
+    const noFileSelected = page.locator('[data-testid="no-file-selected"]');
+    await expect(noFileSelected).toBeVisible();
+  });
+
+  test('should be able to upload a file and then delete it and upload again', async ({ page }) => {
+    await page.click('[data-testid="file-upload-button"]');
+    await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
+
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
+
+    const deleteButton = page.locator('[data-testid="delete-button-options-drawer"]');
+    await expect(deleteButton).toBeEnabled({ timeout: 1000 });
+
+    await deleteButton.click();
+
+    await page.click('[data-testid="upload-button-options-drawer"]');
+    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
+
+    await expect(deleteButton).toBeEnabled({ timeout: 1000 });
+
+    const fileList = page.locator('[data-testid="file-list"]');
+    const fileListItems = await fileList.locator('button').all();
+    expect(fileListItems).toHaveLength(2);
   });
 });

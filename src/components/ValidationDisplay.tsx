@@ -23,7 +23,6 @@ export default function ValidationDisplay() {
             flexDirection: 'column',
             alignItems: 'center',
             justifyContent: 'center',
-            overflow: 'auto',
             gap: '10px',
           }}
         >
@@ -51,11 +50,9 @@ export default function ValidationDisplay() {
             justifyContent: 'center',
             alignItems: 'center',
             flexGrow: 1,
-            height: '100%',
-            width: '100%',
           }}
         >
-          <CircularProgress size={100} data-testid="loading-spinner" />
+          <CircularProgress disableShrink size={100} data-testid="loading-spinner" />
         </Container>
       )}
       {selectedFile && !uploading && <CodeEditor />}

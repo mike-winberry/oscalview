@@ -4,7 +4,7 @@ import useFileManager from '../useFileManager';
 describe('useFileUpload', () => {
   it('should return the correct values', () => {
     const { result } = renderHook(() => useFileManager());
-    expect(result.current.selectedFile).toBeUndefined();
+    expect(result.current.selectedFile).toBeNull();
     expect(result.current.handleFileUpload).toBeDefined();
   });
 
@@ -25,6 +25,6 @@ describe('useFileUpload', () => {
     act(() => {
       result.current.handleFileUpload({ target: { files: [] } } as unknown as React.ChangeEvent<HTMLInputElement>);
     });
-    expect(result.current.selectedFile).toBeUndefined();
+    expect(result.current.selectedFile).toBeNull();
   });
 });
