@@ -1,9 +1,10 @@
 import React, { createContext, useContext, ReactNode } from 'react';
 import { UploadedFile } from '@/lib/types/UploadedFile';
 import useFileManager from '@/hooks/useFileManager';
+import { ValidationResult } from '@/lib/types/gen';
 
 interface FileValidationContextProps {
-  handleValidate: () => void;
+  handleValidate: () => Promise<ValidationResult>;
   uploading: boolean;
   validating: boolean;
   files: UploadedFile[];

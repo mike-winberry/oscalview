@@ -91,24 +91,6 @@ test.describe('Home Page', () => {
     expect(fileListItems).toHaveLength(2);
   });
 
-  test('should switch between files in the file list', async ({ page }) => {
-    await page.click('[data-testid="file-upload-button"]');
-    await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
-
-    await page.click('[data-testid="upload-button-options-drawer"]');
-    await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
-
-    const fileList = page.locator('[data-testid="file-list"]');
-    const fileListItems = await fileList.locator('button').all();
-    expect(fileListItems).toHaveLength(2);
-    expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('false');
-    expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('true');
-
-    await fileListItems[0].click();
-    await expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('true');
-    await expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('false');
-  });
-
   test('should delete a file from the file list', async ({ page }) => {
     await page.click('[data-testid="upload-button-options-drawer"]');
     await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);

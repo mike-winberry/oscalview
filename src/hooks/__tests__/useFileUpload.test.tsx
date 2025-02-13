@@ -10,14 +10,14 @@ describe('useFileUpload', () => {
 
   it('should handle file change', async () => {
     const { result } = renderHook(() => useFileManager());
-    const file = new File(['test'], 'test.txt', { type: 'text/plain' });
+    const file = new File(['test'], 'test.json', { type: 'application/json' });
 
     await act(async () => {
       result.current.handleFileUpload({ target: { files: [file] } } as unknown as React.ChangeEvent<HTMLInputElement>);
       await waitFor(() => result.current.selectedFile !== undefined);
     });
 
-    expect(result.current.selectedFile).toEqual({ content: 'test', name: 'test.txt', file });
+    expect(result.current.selectedFile).toEqual({ content: 'test', name: 'test.json', file, extension: 'json' });
   });
 
   it('should handle file change with no file', () => {
