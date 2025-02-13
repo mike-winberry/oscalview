@@ -86,27 +86,48 @@ test.describe('Home Page', () => {
     await page.click('[data-testid="upload-button-options-drawer"]');
     await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
 
+    // Wait for the validation result to be visible after the second file upload
+    const validationResult = page.locator('[data-testid="validation-result-display"]');
+    await expect(validationResult).toBeVisible();
+
     const fileList = page.locator('[data-testid="file-list"]');
     const fileListItems = await fileList.locator('button').all();
     expect(fileListItems).toHaveLength(2);
   });
 
   test('should switch between files in the file list', async ({ page }) => {
+    // upload the first file
     await page.click('[data-testid="file-upload-button"]');
     await page.setInputFiles('[data-testid="file-upload-input"]', VALID_COMPONENT_DEFINITION_PATH);
 
+    // upload the second file using drawer
     await page.click('[data-testid="upload-button-options-drawer"]');
     await page.setInputFiles('[data-testid="options-drawer-file-upload"]', INVALID_ASSESSMENT_RESULT_PATH);
 
+    // wait for the validation to settle
+    const validationResult = page.locator('[data-testid="validation-result-display"]');
+    await expect(validationResult).toBeVisible();
+
+    // check that the file list has two items
     const fileList = page.locator('[data-testid="file-list"]');
     const fileListItems = await fileList.locator('button').all();
     expect(fileListItems).toHaveLength(2);
-    expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('false');
-    expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('true');
 
+    // check that the validation result is not running
+    await expect(validationResult).not.toContainText('Running');
+
+    // switch to the first file
     await fileListItems[0].click();
-    await expect(fileListItems[0].getAttribute('aria-selected')).resolves.toBe('true');
-    await expect(fileListItems[1].getAttribute('aria-selected')).resolves.toBe('false');
+
+    // wait for the validation to settle
+    await expect(validationResult).toBeVisible();
+
+    // check that the editor is visible
+    const editor = page.locator(`[data-testid="code-editor-display"]`);
+    await expect(editor).toBeVisible();
+
+    // check that the editor contains the text 'component-definition'
+    await expect(editor).toContainText('component-definition');
   });
 
   test('should delete a file from the file list', async ({ page }) => {

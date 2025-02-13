@@ -1,3 +1,8 @@
+import * as prettier from 'prettier/standalone.js';
+import * as babelPlugin from 'prettier/plugins/babel.js';
+import * as estreePlugin from 'prettier/plugins/estree.js';
+import * as yamlPlugin from 'prettier/plugins/yaml.js';
+import { Plugin } from 'prettier';
 import { UploadedFile } from './types/UploadedFile';
 
 export const handleDownload = (selectedFile: UploadedFile) => {
@@ -18,3 +23,26 @@ export const handleDownload = (selectedFile: UploadedFile) => {
   link.click();
   document.body.removeChild(link);
 };
+
+// runs prettier and sets the file extension and validation result if prettier fails
+export async function prettify(
+  content: string,
+  extension: 'json' | 'yaml'
+): Promise<{ result: string; formatError: string }> {
+  let result = '';
+  let formatError = '';
+  try {
+    result = await prettier.format(content, {
+      parser: extension,
+      plugins: [babelPlugin, estreePlugin as Plugin, yamlPlugin],
+      indentStyle: 'space',
+      indentWidth: 2,
+    });
+  } catch (error) {
+    if (error instanceof Error) {
+      formatError = JSON.stringify(error.message, null, 2);
+      result = content;
+    }
+  }
+  return { result, formatError };
+}

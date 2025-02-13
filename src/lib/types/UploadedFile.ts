@@ -6,4 +6,5 @@ export type UploadedFile = {
   path?: string;
   name?: string;
   validationResult?: ValidationResult;
+  extension?: 'json' | 'yaml';
 };
