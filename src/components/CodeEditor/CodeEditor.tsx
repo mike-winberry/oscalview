@@ -1,8 +1,9 @@
 import CodeMirror from '@uiw/react-codemirror';
 import * as yamlPlugin from 'prettier/plugins/yaml.js';
 import * as prettier from 'prettier/standalone.js';
+import { Plugin } from 'prettier';
 import * as babelPlugin from 'prettier/plugins/babel.js';
-import estreePlugin from 'prettier/plugins/estree.js';
+import * as estreePlugin from 'prettier/plugins/estree.js';
 import { Box, useMediaQuery, Fab } from '@mui/material';
 import { UploadedFile } from '@/lib/types/UploadedFile';
 import { langs } from '@uiw/codemirror-extensions-langs';
@@ -27,7 +28,7 @@ async function prettify(content: string, extension: 'json' | 'yaml'): Promise<{ 
   try {
     result = await prettier.format(content, {
       parser: extension,
-      plugins: [babelPlugin, estreePlugin, yamlPlugin],
+      plugins: [babelPlugin, estreePlugin as Plugin, yamlPlugin],
       indentStyle: 'space',
       indentWidth: 2,
     });

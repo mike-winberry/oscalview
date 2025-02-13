@@ -4,7 +4,7 @@
   "private": true,
   "scripts": {
     "predev": "npm run build:wasm && npm run generate:types",
-    "dev": "next dev --turbopack",
+    "dev": "next dev",
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
