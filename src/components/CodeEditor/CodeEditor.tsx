@@ -1,7 +1,7 @@
 import CodeMirror from '@uiw/react-codemirror';
-import yamlPlugin from 'prettier/plugins/yaml.js';
+import * as yamlPlugin from 'prettier/plugins/yaml.js';
 import * as prettier from 'prettier/standalone.js';
-import babelPlugin from 'prettier/plugins/babel.js';
+import * as babelPlugin from 'prettier/plugins/babel.js';
 import estreePlugin from 'prettier/plugins/estree.js';
 import { Box, useMediaQuery, Fab } from '@mui/material';
 import { UploadedFile } from '@/lib/types/UploadedFile';
