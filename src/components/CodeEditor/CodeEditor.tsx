@@ -29,7 +29,7 @@ async function prettify(content: string, extension: 'json' | 'yaml'): Promise<{ 
       parser: extension,
       plugins: [babelPlugin, estreePlugin, yamlPlugin],
       indentStyle: 'space',
-      indentWidth: 5,
+      indentWidth: 2,
     });
   } catch (error) {
     if (error instanceof Error) {
@@ -55,7 +55,6 @@ const CodeEditor = () => {
 
   const handleFileChange = useCallback(async () => {
     prettify(selectedFile?.content || '', selectedFile?.extension || 'json').then(async ({ result, formatError }) => {
-      console.log('handleFileChange');
       const validationResult = await handleValidate();
       const finalValidationResult = formatError ? { prettier: formatError, ...validationResult } : validationResult;
       updateFile({
@@ -68,11 +67,7 @@ const CodeEditor = () => {
   }, [selectedFile, updateFile, handleValidate]);
 
   useEffect(() => {
-    if (
-      !validating &&
-      (selectedFile?.content !== previousFileRef.current?.content ||
-        selectedFile?.name !== previousFileRef.current?.name)
-    ) {
+    if (!validating && selectedFile?.content !== previousFileRef.current?.content) {
       previousFileRef.current = selectedFile;
       handleFileChange();
     }
