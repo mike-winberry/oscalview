@@ -1,9 +1,4 @@
 import CodeMirror from '@uiw/react-codemirror';
-import * as yamlPlugin from 'prettier/plugins/yaml.js';
-import * as prettier from 'prettier/standalone.js';
-import { Plugin } from 'prettier';
-import * as babelPlugin from 'prettier/plugins/babel.js';
-import * as estreePlugin from 'prettier/plugins/estree.js';
 import { Box, useMediaQuery, Fab } from '@mui/material';
 import { UploadedFile } from '@/lib/types/UploadedFile';
 import { langs } from '@uiw/codemirror-extensions-langs';
@@ -15,31 +10,12 @@ import { tokyoNightDay } from '@uiw/codemirror-theme-tokyo-night-day';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import React, { useCallback, useEffect, useRef, useState, memo } from 'react';
 import './CodeEditor.css';
+import { ValidationResult } from '@/lib/types/gen';
 
 // Memoizes the CodeMirror component to prevent unnecessary re-renders
 const MemoizedCodeMirror = memo(CodeMirror, (prevProps, nextProps) => {
   return prevProps.value === nextProps.value;
 });
-
-// runs prettier and sets the file extension and validation result if prettier fails
-async function prettify(content: string, extension: 'json' | 'yaml'): Promise<{ result: string; formatError: string }> {
-  let result = '';
-  let formatError = '';
-  try {
-    result = await prettier.format(content, {
-      parser: extension,
-      plugins: [babelPlugin, estreePlugin as Plugin, yamlPlugin],
-      indentStyle: 'space',
-      indentWidth: 2,
-    });
-  } catch (error) {
-    if (error instanceof Error) {
-      formatError = JSON.stringify(error.message, null, 2);
-      result = content;
-    }
-  }
-  return { result, formatError };
-}
 
 const CodeEditor = () => {
   // Context
@@ -54,25 +30,17 @@ const CodeEditor = () => {
   const previousFileRef = useRef<UploadedFile | null>(null);
   const debouncedUpdateContentRef = useRef<NodeJS.Timeout | null>(null);
 
-  const handleFileChange = useCallback(async () => {
-    prettify(selectedFile?.content || '', selectedFile?.extension || 'json').then(async ({ result, formatError }) => {
-      const validationResult = await handleValidate();
-      const finalValidationResult = formatError ? { prettier: formatError, ...validationResult } : validationResult;
-      updateFile({
-        ...selectedFile,
-        content: result,
-        extension: selectedFile?.extension || 'json',
-        validationResult: finalValidationResult,
-      });
-    });
-  }, [selectedFile, updateFile, handleValidate]);
-
   useEffect(() => {
     if (!validating && selectedFile?.content !== previousFileRef.current?.content) {
       previousFileRef.current = selectedFile;
-      handleFileChange();
+      handleValidate().then((validationResult: ValidationResult) => {
+        updateFile({
+          ...selectedFile,
+          validationResult,
+        });
+      });
     }
-  }, [selectedFile, handleFileChange, validating]);
+  }, [selectedFile, handleValidate, validating, updateFile]);
 
   // Sets the validation result when the selectedFile validationResult changes
   useEffect(() => {

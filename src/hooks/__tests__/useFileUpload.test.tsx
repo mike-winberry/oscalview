@@ -1,6 +1,25 @@
 import { renderHook, act, waitFor } from '@testing-library/react';
 import useFileManager from '../useFileManager';
 
+// Mock the prettify function
+jest.mock('../../lib/utils', () => ({
+  prettify: jest.fn((content: string) => {
+    return Promise.resolve({ result: content, formatError: undefined }); // Mocked response
+  }),
+}));
+
+// Mock the FileReader
+global.FileReader = class {
+  static EMPTY = 0;
+  static LOADING = 1;
+  static DONE = 2;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onload: any;
+  readAsText = jest.fn(() => {
+    this.onload({ target: { result: 'test' } }); // Simulate file read
+  });
+} as unknown as typeof FileReader;
+
 describe('useFileUpload', () => {
   it('should return the correct values', () => {
     const { result } = renderHook(() => useFileManager());
@@ -13,11 +32,18 @@ describe('useFileUpload', () => {
     const file = new File(['test'], 'test.json', { type: 'application/json' });
 
     await act(async () => {
-      result.current.handleFileUpload({ target: { files: [file] } } as unknown as React.ChangeEvent<HTMLInputElement>);
-      await waitFor(() => result.current.selectedFile !== undefined);
+      result.current.handleFileUpload({
+        target: { files: [file] },
+      } as unknown as React.ChangeEvent<HTMLInputElement>);
+      await waitFor(() => result.current.selectedFile !== null);
     });
-
-    expect(result.current.selectedFile).toEqual({ content: 'test', name: 'test.json', file, extension: 'json' });
+    expect(result.current.selectedFile).toEqual({
+      content: 'test',
+      name: 'test.json',
+      file,
+      extension: 'json',
+      validationResult: undefined,
+    });
   });
 
   it('should handle file change with no file', () => {

@@ -1,5 +1,6 @@
 import { ValidationResult } from '@/lib/types/gen';
 import { UploadedFile } from '@/lib/types/UploadedFile';
+import { prettify } from '@/lib/utils';
 import { useCallback, useState } from 'react';
 
 function useFileManager() {
@@ -41,11 +42,13 @@ function useFileManager() {
       reader.onload = async (event) => {
         const fileContent = event.target?.result;
         if (typeof fileContent === 'string') {
+          const { result, formatError } = await prettify(fileContent, file.name.includes('json') ? 'json' : 'yaml');
           addFile({
             file,
-            content: fileContent,
+            content: result,
             name: file.name,
             extension: file.name.includes('json') ? 'json' : 'yaml',
+            validationResult: formatError ? { prettier: formatError } : undefined,
           });
         }
         setUploading(false);
