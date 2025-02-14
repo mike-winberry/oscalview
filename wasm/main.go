@@ -33,7 +33,7 @@ func validateOscal(this js.Value, args []js.Value) interface{} {
 	if err != nil {
 		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to match oscal document: %s", err)})
 	}
-	isLulaDocument, err := regexp.MatchString(`^lula-.*`, inputString)
+	isLulaDocument, err := regexp.MatchString(`lula-version`, inputString)
 	if err != nil {
 		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to match lula document: %s", err)})
 	}
