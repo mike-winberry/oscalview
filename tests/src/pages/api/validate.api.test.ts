@@ -9,12 +9,14 @@ test.describe('API Route /api/validate', () => {
     const response = await request.post(`${baseUrl}/api/validate`, {
       form: {
         data: '',
+        path: 'test.json',
+        extension: 'json',
       },
     });
 
     expect(response.status()).toBe(200);
     const responseBody = await response.json();
-    expect(responseBody.error).toBe('failed to create validator: expected model to have 1 key, got 0');
+    expect(responseBody.error).toBe('invalid document type ensure the document contains oscal-version or lula-version');
   });
 
   test('should return 400 for empty form data', async ({ request }) => {
@@ -30,6 +32,8 @@ test.describe('API Route /api/validate', () => {
     const response = await request.post(`${baseUrl}/api/validate`, {
       form: {
         data: validOscalJson,
+        path: 'test.json',
+        extension: 'json',
       },
     });
 
@@ -46,6 +50,8 @@ test.describe('API Route /api/validate', () => {
     const response = await request.post(`${baseUrl}/api/validate`, {
       form: {
         data: invalidOscalYaml,
+        path: 'test.yaml',
+        extension: 'yaml',
       },
     });
 

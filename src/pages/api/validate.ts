@@ -50,13 +50,15 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
   try {
     const { fields } = await parseForm();
     const data = fields.data; // Ensure this matches the form field name
+    const path = fields.path;
+    const extension = fields.extension;
 
     if (!data) {
       return res.status(400).json({ error: 'No data provided' });
     }
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const result = (globalThis as any).validateOscal(data);
+    const result = (globalThis as any).validateOscal(data, path, extension);
     return res.status(200).json(result);
   } catch (error) {
     return res.status(500).json({ error: `Error parsing the form: ${error}` });
