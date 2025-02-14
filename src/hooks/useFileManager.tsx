@@ -66,6 +66,8 @@ function useFileManager() {
     try {
       const formData = new FormData();
       formData.append('data', selectedFile.content || '');
+      formData.append('path', selectedFile.name || '');
+      formData.append('extension', selectedFile.extension || '');
       const response = await fetch('/api/validate', {
         method: 'POST',
         body: formData,

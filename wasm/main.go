@@ -5,14 +5,14 @@ package main
 
 import (
 	"fmt"
+	"regexp"
 	"syscall/js"
 
-	"github.com/defenseunicorns/go-oscal/src/pkg/model"
-	"github.com/defenseunicorns/go-oscal/src/pkg/validation"
-	"github.com/santhosh-tekuri/jsonschema/v6"
+	"oscalot/wasm/lula"
+	"oscalot/wasm/oscal"
 )
 
-func validateOscal(this js.Value, p []js.Value) interface{} {
+func validateOscal(this js.Value, args []js.Value) interface{} {
 	defer func() {
 		if r := recover(); r != nil {
 			fmt.Println("Recovered from panic:", r)
@@ -23,42 +23,37 @@ func validateOscal(this js.Value, p []js.Value) interface{} {
 	// Formidable returns an array of objects, so we need to extract the first element
 	// will also allow for future use of multiple files implementations
 	var inputString string
-	if p[0].Type() == js.TypeObject && p[0].Length() > 0 {
-		inputString = p[0].Index(0).String()
+	if args[0].Type() == js.TypeObject && args[0].Length() > 0 {
+		inputString = args[0].Index(0).String()
 	} else {
-		inputString = p[0].String()
+		inputString = args[0].String()
 	}
 
+	isOscalDocument, err := regexp.MatchString(`oscal-version`, inputString)
+	if err != nil {
+		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to match oscal document: %s", err)})
+	}
+	isLulaDocument, err := regexp.MatchString(`^lula-.*`, inputString)
+	if err != nil {
+		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to match lula document: %s", err)})
+	}
+	if !isOscalDocument && !isLulaDocument {
+		return js.ValueOf(map[string]interface{}{"error": "invalid document type ensure the document contains oscal-version or lula-version"})
+	}
+
+	filePath := args[1].Index(0).String()
+	extension := args[2].Index(1).String()
 	inputBytes := []byte(inputString)
 
-	// Create a new validator
-	validator, err := validation.NewValidator(inputBytes)
-	if err != nil {
-		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to create validator: %s", err)})
+	if isOscalDocument {
+		jsonResult := oscal.ValidateOscal(inputBytes, filePath)
+		return js.ValueOf(jsonResult)
+	} else if isLulaDocument && extension == "yaml" {
+		jsonResult := lula.ValidateLula(inputBytes, filePath)
+		return js.ValueOf(jsonResult)
 	}
 
-	// Validate the input
-	err = validator.Validate()
-	if err != nil {
-		// If the error is not a validation error, return the error
-		_, ok := err.(*jsonschema.ValidationError)
-		if !ok {
-			return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to run validation: %s", err)})
-		}
-	}
-
-	// Get the validation result
-	validationResponse, err := validator.GetValidationResult()
-	if err != nil {
-		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to get validation result: %s", err)})
-	}
-
-	jsonResult, err := model.CoerceToJsonMap(validationResponse)
-	if err != nil {
-		return js.ValueOf(map[string]interface{}{"error": fmt.Sprintf("failed to coerce to json: %s", err)})
-	}
-
-	return js.ValueOf(jsonResult)
+	return js.ValueOf(map[string]interface{}{"error": "lula documents must be a yaml file"})
 }
 
 func main() {
